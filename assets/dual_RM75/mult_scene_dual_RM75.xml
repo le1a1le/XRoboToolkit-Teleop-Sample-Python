@@ -1,0 +1,129 @@
+<?xml version="1.0" ?>
+<mujoco model="dual_RM75 scene with table arena">
+  <!-- Include the robot model -->
+  <include file="realman_dual_rm75.xml"/>
+
+  <!-- Scene statistics for camera view -->
+  <statistic center="0.3 0 0.8" extent="1.2" meansize="0.1"/>
+
+  <!-- Visual settings -->
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.1 0.1 0.1" specular="0 0 0"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+
+  <!-- Assets for scene elements -->
+  <asset>
+    <!-- Skybox texture -->
+    <texture builtin="gradient" height="256" rgb1=".9 .9 1." rgb2=".2 .3 .4" type="skybox" width="256"/>
+    
+    <!-- Floor texture -->
+    <texture file="/home/zz/mujoco_RL_file/robosuite/robosuite/models/assets/arenas/../textures/light-gray-floor-tile.png" type="2d" name="texplane"/>
+    <material name="floorplane" reflectance="0.01" shininess="0.0" specular="0.0" texrepeat="2 2" texture="texplane" texuniform="true"/>
+    
+    <!-- Table ceramic texture -->
+    <texture file="/home/zz/mujoco_RL_file/robosuite/robosuite/models/assets/arenas/../textures/ceramic.png" type="cube" name="tex-ceramic"/>
+    <material name="table_ceramic" reflectance="0.0" shininess="0.0" specular="0.2" texrepeat="1 1" texture="tex-ceramic"/>
+    
+    <!-- Table legs metal texture -->
+    <texture file="/home/zz/mujoco_RL_file/robosuite/robosuite/models/assets/arenas/../textures/steel-brushed.png" type="cube" name="tex-steel-brushed"/>
+    <material name="table_legs_metal" reflectance="0.8" shininess="0.8" texrepeat="1 1" texture="tex-steel-brushed"/>
+    
+    <!-- Walls texture -->
+    <texture file="/home/zz/mujoco_RL_file/robosuite/robosuite/models/assets/arenas/../textures/light-gray-plaster.png" type="2d" name="tex-light-gray-plaster"/>
+    <material name="walls_mat" reflectance="0.0" shininess="0.1" specular="0.1" texrepeat="3 3" texture="tex-light-gray-plaster" texuniform="true"/>
+    
+    <!-- Table material -->
+    <texture name="textable" builtin="flat" height="512" width="512" rgb1="0.5 0.5 0.5" rgb2="0.5 0.5 0.5"/>
+    <material name="table_mat" texture="textable"/>
+
+    <!-- Peg assets -->
+    <mesh file="object_scene/yuanzhu.STL" name="yuanzhu_mesh" scale="0.002 0.002 0.002"/>
+    <texture file="object_scene/red-wood.png" name="red-wood"/>
+    <material name="peg_material" reflectance="1.0" shininess="1.0" specular="1.0" texrepeat="1 1" texture="red-wood" texuniform="true"/>
+
+    <!-- Hole assets -->
+    <mesh file="object_scene/yuanzhukong.STL" name="yuanzhukong_mesh" scale="0.002 0.002 0.002"/>
+    <texture file="object_scene/blue-wood.png" name="blue-wood"/>
+    <material name="hole_material" reflectance="1.0" shininess="1.0" specular="1.0" texrepeat="1 1" texture="blue-wood" texuniform="true"/>
+  </asset>
+
+  <worldbody>
+    <!-- Scene lighting -->
+    <light pos="1.0 1.0 1.5" dir="-0.2 -0.2 -1" specular="0.3 0.3 0.3" directional="true" castshadow="false"/>
+    
+    <!-- Floor plane -->
+    <geom condim="3" group="1" material="floorplane" name="floor" pos="0.0 0.0 0.0" size="3 3 .125" type="plane"/>
+    
+    <!-- Walls (visual only) -->
+    <geom pos="-1.25 2.25 1.5" quat="0.6532815 0.6532815 0.2705981 0.2705981" size="1.06 1.5 0.01" type="box" conaffinity="0" contype="0" group="1" name="wall_leftcorner_visual" material="walls_mat"/>
+    <geom pos="-1.25 -2.25 1.5" quat="0.6532815 0.6532815 -0.2705981 -0.2705981" size="1.06 1.5 0.01" type="box" conaffinity="0" contype="0" group="1" name="wall_rightcorner_visual" material="walls_mat"/>
+    <geom pos="1.25 3.0 1.5" quat="0.7071 0.7071 0 0" size="1.75 1.5 0.01" type="box" conaffinity="0" contype="0" group="1" name="wall_left_visual" material="walls_mat"/>
+    <geom pos="1.25 -3.0 1.5" quat="0.7071 -0.7071 0 0" size="1.75 1.5 0.01" type="box" conaffinity="0" contype="0" group="1" name="wall_right_visual" material="walls_mat"/>
+    <geom pos="-2.0 0.0 1.5" quat="0.5 0.5 0.5 0.5" size="1.5 1.5 0.01" type="box" conaffinity="0" contype="0" group="1" name="wall_rear_visual" material="walls_mat"/>
+    <geom pos="3.0 0.0 1.5" quat="0.5 0.5 -0.5 -0.5" size="3 1.5 0.01" type="box" conaffinity="0" contype="0" group="1" name="wall_front_visual" material="walls_mat"/>
+    
+    <!-- Table -->
+    <body name="table" pos="0.0 0.8 0.775">
+      <!-- Table collision -->
+      <geom pos="0 0 0" size="0.4 0.4 0.025" type="box" group="0" name="table_collision" friction="1 0.005 0.0001" rgba="0.5 0.5 0 1"/>
+      <!-- Table visual -->
+      <geom pos="0 0 0" size="0.4 0.4 0.025" type="box" conaffinity="0" contype="0" group="1" name="table_visual" material="table_ceramic"/>
+      <!-- Table top site -->
+      <site pos="0.0 0.0 0.025" name="table_top" size="0.001 0.001 0.001" rgba="0 0 0 0"/>
+      <!-- Table legs -->
+      <geom pos="0.30000000000000004 0.30000000000000004 -0.3875" size="0.025 0.3875" type="cylinder" conaffinity="0" contype="0" group="1" name="table_leg1_visual" material="table_legs_metal"/>
+      <geom pos="-0.30000000000000004 0.30000000000000004 -0.3875" size="0.025 0.3875" type="cylinder" conaffinity="0" contype="0" group="1" name="table_leg2_visual" material="table_legs_metal"/>
+      <geom pos="-0.30000000000000004 -0.30000000000000004 -0.3875" size="0.025 0.3875" type="cylinder" conaffinity="0" contype="0" group="1" name="table_leg3_visual" material="table_legs_metal"/>
+      <geom pos="0.30000000000000004 -0.30000000000000004 -0.3875" size="0.025 0.3875" type="cylinder" conaffinity="0" contype="0" group="1" name="table_leg4_visual" material="table_legs_metal"/>
+    </body>
+
+    <!-- Peg object on table (桌面上的圆柱体) -->
+    <!-- 桌面高度: 0.775 + 0.025 = 0.8, peg 底部在 -0.082, 所以 peg body 应该在 0.8 + 0.082 = 0.882 -->
+    <body name="peg" pos="0.15 0.8 0.882">
+      <body name="peg_object">
+        <geom pos="0 0 0" mesh="yuanzhu_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" material="peg_material" group="0" condim="4"/>
+      </body>
+      <site rgba="0 0 0 0" size="0.005" pos="0 0 -0.082" name="peg_bottom_site"/>
+      <site rgba="0 0 0 0" size="0.005" pos="0 0 0.075" name="peg_top_site"/>
+      <site rgba="0 0 0 0" size="0.005" pos="0.0254 0.0254 0" name="peg_horizontal_radius_site"/>
+    </body>
+
+    <!-- Hole object on table (桌面上的圆柱孔) -->
+    <body name="hole" pos="-0.15 0.8 0.882">
+      <body name="hole_object">
+        <geom pos="0 0 0" mesh="yuanzhukong_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" material="hole_material" group="0" condim="4"/>
+      </body>
+      <site rgba="0 0 0 0" size="0.005" pos="0 0 -0.082" name="hole_bottom_site"/>
+      <site rgba="0 0 0 0" size="0.005" pos="0 0 0.075" name="hole_top_site"/>
+      <site rgba="0 0 0 0" size="0.005" pos="0.0254 0.0254 0" name="hole_horizontal_radius_site"/>
+    </body>
+    
+    <!-- Right target: mocap body for visualizing right arm teleop target -->
+    <body name="right_target" pos="0.4145 0.4101 0.7597" quat="0.2797 0.1481 -0.9050 -0.2843" mocap="true">
+      <geom name="right_target_x_shaft" type="cylinder" size="0.005 0.05" pos="0.05 0 0" zaxis="1 0 0" rgba="1 0 0 1" contype="0" conaffinity="0" group="1"/>
+      <geom name="right_target_y_shaft" type="cylinder" size="0.005 0.05" pos="0 0.05 0" zaxis="0 1 0" rgba="0 1 0 1" contype="0" conaffinity="0" group="1"/>
+      <geom name="right_target_z_shaft" type="cylinder" size="0.005 0.05" pos="0 0 0.05" zaxis="0 0 1" rgba="0 0 1 1" contype="0" conaffinity="0" group="1"/>
+      <site type="sphere" size="0.01" rgba="0 0 1 1" group="1"/>
+    </body>
+    
+    <!-- Left target: mocap body for visualizing left arm teleop target -->
+    <body name="left_target" pos="-0.5083 0.3923 0.6192" quat="0.0632 -0.8820 -0.4590 -0.0861" mocap="true">
+      <geom name="left_target_x_shaft" type="cylinder" size="0.005 0.05" pos="0.05 0 0" zaxis="1 0 0" rgba="1 0 0 1" contype="0" conaffinity="0" group="1"/>
+      <geom name="left_target_y_shaft" type="cylinder" size="0.005 0.05" pos="0 0.05 0" zaxis="0 1 0" rgba="0 1 0 1" contype="0" conaffinity="0" group="1"/>
+      <geom name="left_target_z_shaft" type="cylinder" size="0.005 0.05" pos="0 0 0.05" zaxis="0 0 1" rgba="0 0 1 1" contype="0" conaffinity="0" group="1"/>
+      <site type="sphere" size="0.01" rgba="0 0 1 1" group="1"/>
+    </body>
+    
+    <!-- World coordinate frame reference (optional) -->
+    <geom name="world_x_shaft" type="cylinder" size="0.01 0.1" pos="0.1 0 0.0" zaxis="1 0 0" rgba="1 0 0 1" contype="0" conaffinity="0" group="1"/>
+    <geom name="world_y_shaft" type="cylinder" size="0.01 0.1" pos="0 0.1 0.0" zaxis="0 1 0" rgba="0 1 0 1" contype="0" conaffinity="0" group="1"/>
+    <geom name="world_z_shaft" type="cylinder" size="0.01 0.2" pos="0 0 0.2" zaxis="0 0 1" rgba="0 0 1 1" contype="0" conaffinity="0" group="1"/>
+
+    <!-- Cameras -->
+    <camera mode="fixed" name="frontview" pos="1.6 0.0 1.45" quat="0.56 0.43 0.43 0.56"/>
+    <camera mode="fixed" name="birdview" pos="-0.2 0.0 3.0" quat="0.7071 0 0 0.7071"/>
+    <camera mode="fixed" name="agentview" pos="0.5 0.0 1.35" quat="0.653 0.271 0.271 0.653"/>
+    <camera mode="fixed" name="sideview" pos="-0.05651774593317116 1.2761224129427358 1.4879572214102434" quat="0.009905065491771751 0.006877963156909582 0.5912228352893879 0.806418094001364"/>
+  </worldbody>
+</mujoco>

@@ -12,7 +12,7 @@ def main(
     robot_urdf_path: str = os.path.join(ASSET_PATH, "galaxea/A1X/dual_a1x_fixed_gripper.urdf"),
     scale_factor: float = 1.5,
     visualize_placo: bool = True,
-):
+): 
     """
     Main function to run the dual A1X teleoperation in MuJoCo.
     """

@@ -1,0 +1,148 @@
+<mujoco model="pgi140">
+    <compiler angle="radian" coordinate="local" inertiafromgeom="true"/>
+    <option integrator="RK4" timestep="0.002"/>
+    <asset>
+        <!-- 这些路径假设和 URDF 相同（请放在 meshes/ 下） -->
+        <mesh name="origin_link" file="meshes/pgi140_gripper/origin_link.STL"/>
+        <mesh name="finger1_link" file="meshes/pgi140_gripper/finger1_link.STL"/>
+        <mesh name="finger2_link" file="meshes/pgi140_gripper/finger2_link.STL"/>
+        <mesh name="tip1_link" file="meshes/pgi140_gripper/tip1.STL"/>
+        <mesh name="tip2_link" file="meshes/pgi140_gripper/tip2.STL"/>
+    </asset>
+    <actuator>
+        <!-- 驱动左手指关节（滑动关节，范围 0~0.04m） -->
+        <position 
+            name="gripper_finger1_joint" 
+            joint="finger1_joint" 
+            ctrllimited="true" 
+            ctrlrange="0.0 0.04"  
+            kp="1000"             
+            forcelimited="true" 
+            forcerange="-20 20"/> <!-- 最大力限制 -->
+        
+        <!-- 驱动右手指关节（滑动关节，范围 -0.04~0m，与左手指对称） -->
+        <position 
+            name="gripper_finger2_joint" 
+            joint="finger2_joint" 
+            ctrllimited="true" 
+            ctrlrange="-0.04 0.0  " 
+            kp="1000" 
+            forcelimited="true" 
+            forcerange="-20 20"/>
+    </actuator>
+    <worldbody>
+        <!-- 主体 -->
+        <body name="pgi140_base" pos="0 0 0">
+            <!-- 固定惯性 -->
+            <inertial pos="-0.00015465 -2.2241e-05 0.043187"
+                      mass="0.44125"
+                      diaginertia="0.00018709 0.00037837 0.00044482" />
+      
+            <!-- 可视化 origin_link -->
+            <geom name="origin_link" type="mesh" mesh="origin_link" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="0" group="1"/>
+
+            <!-- 手指1 -->
+            <body name="finger1" pos="-0.001 -0.01815 0.0955" quat="0 0  0 1">
+                <joint 
+                    name="finger1_joint" 
+                    type="slide" 
+                    axis="1 0  0 "  
+                    limited="true" 
+                    range="0.0 0.04" 
+                    damping="100"/>  <!-- 阻尼 -->
+
+                <inertial 
+                    pos="-0.021 -4.1135e-05 -0.0077742"
+                    mass="0.01357"
+                    diaginertia="5.6166e-07 2.3543e-06 2.7234e-06"/>
+                
+                <geom 
+                    name="finger1_link" 
+                    type="mesh" 
+                    mesh="finger1_link" 
+                    rgba="0.4 0.4 0.4 1"  
+                    contype="1" 
+                    conaffinity="0"  
+                    group="1"/>
+
+                <!-- 指尖1 -->
+                <body name="tip1_link" pos="0 0. 0" quat=" 0 0  0 1">
+    
+
+                    <inertial 
+                    pos="0 0 0"
+                    mass="0.01357"
+                    diaginertia="5.6166e-07 2.3543e-06 2.7234e-06"/>
+                
+                    <geom 
+                    name="tip1_link" 
+                    type="mesh" 
+                    mesh="tip1_link" 
+                    rgba="0.4 0.4 0.4 1"  
+                    contype="1" 
+                    conaffinity="0"  
+                    group="1"/>
+
+                 </body>
+            </body>
+
+            <!-- 手指2 -->
+            <body name="finger2" pos="0.001 0.01815 0.0955">
+                <joint 
+                    name="finger2_joint" 
+                    type="slide" 
+                    axis="-1 0  0" 
+                    limited="true" 
+                    range="-0.04 0.0"  
+                    damping="100"/>  <!-- 阻尼 -->
+
+                <inertial 
+                    pos="-0.021 -4.1135e-05 -0.0077742"
+                    mass="0.01357"
+                    diaginertia="5.6166e-07 2.3543e-06 2.7234e-06"/>
+                
+                <geom 
+                    name="finger2_link" 
+                    type="mesh" 
+                    mesh="finger2_link" 
+                    rgba="0.4 0.4 0.4 1"  
+                    contype="1" 
+                    conaffinity="0"  
+                    group="1"/>
+                <!-- 指尖2 -->
+                <body name="tip2_link" pos="0 0. 0" quat=" 0 0  0 1">
+                    <inertial 
+                    pos="0 0. 0"
+                    mass="0.01357"
+                    diaginertia="0 0 0 "/>
+                
+                    <geom 
+                    name="tip2_link" 
+                    type="mesh" 
+                    mesh="tip2_link" 
+                    rgba="0.4 0.4 0.4 1"  
+                    contype="1" 
+                    conaffinity="0"  
+                    group="1"/>
+
+                 </body>
+            </body>
+            <body name="eef" pos ="0 0 0 " quat = "1 0 0 0">
+            <!-- 末端参考点 -->
+                <site name="ee" pos="0 0 0" size="0.001" rgba="0 0 0 0"/>
+                <site name="ee_x" pos="0.02 0 0" size="0.001" rgba="0 0 0 0"/>
+                <site name="ee_y" pos="0 0.02 0" size="0.001" rgba="0 0 0 0"/>
+                <site name="ee_z" pos="0 0 0.02" size="0.001" rgba="0 0 0 0"/>
+                <site name="grip_site" pos="0 0 0.02" size="0.001" rgba="0 1 0 0.5"/>
+                <site name="grip_site_cylinder" pos="0 0 0.02" size="0.01" rgba="0 1 0 0.2"/>
+            </body>
+        </body>
+    </worldbody>
+
+
+    <!-- 可选：添加触觉或力传感器 -->
+    <sensor>
+        <force name="force_ee" site="grip_site"/>
+        <torque name="torque_ee" site="grip_site"/>
+    </sensor>
+</mujoco>

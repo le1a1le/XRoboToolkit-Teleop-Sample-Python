@@ -134,6 +134,29 @@ def calc_pin_q_from_mujoco_qpos(
         pin_q_offset = 7
     else:
         pin_q_offset = 0
+
+    # Debug: print mapping on first call
+    if not hasattr(calc_pin_q_from_mujoco_qpos, '_debug_printed'):
+        calc_pin_q_from_mujoco_qpos._debug_printed = True
+        print("\n" + "=" * 80)
+        print("calc_pin_q_from_mujoco_qpos() - Joint Mapping:")
+        print("=" * 80)
+        print(f"pin_q_offset = {pin_q_offset}")
+        print(f"MuJoCo qpos length: {len(mujoco_qpos)}")
+        print(f"Pinocchio q length: {len(pin_q)}")
+        print(f"Number of actuated joints: {len(pin_joint_names)}")
+        print("\nJoint mapping details:")
+        for i, joint_name in enumerate(pin_joint_names):
+            mujoco_joint_id = mujoco.mj_name2id(mujoco_model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
+            if mujoco_joint_id != -1:
+                qpos_addr = mujoco_model.jnt_qposadr[mujoco_joint_id]
+                pin_idx = i + pin_q_offset
+                mj_value = mujoco_qpos[qpos_addr] if qpos_addr < len(mujoco_qpos) else 0.0
+                print(f"  [{i:2d}] {joint_name:40s} | MuJoCo ID={mujoco_joint_id:2d}, qpos_addr={qpos_addr:2d} -> Pin[{pin_idx:2d}] = {mj_value:8.4f}")
+            else:
+                print(f"  [{i:2d}] {joint_name:40s} | MuJoCo ID=NOT FOUND")
+        print("=" * 80)
+
     for i, joint_name in enumerate(pin_joint_names):
         mujoco_joint_id = mujoco.mj_name2id(mujoco_model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
         if mujoco_joint_id != -1:

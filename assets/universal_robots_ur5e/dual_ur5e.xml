@@ -35,6 +35,9 @@
         <material name="jointgray" rgba="0.278 0.278 0.278 1"/>
         <material name="linkgray" rgba="0.82 0.82 0.82 1"/>
         <material name="urblue" rgba="0.49 0.678 0.8 1"/>
+        <material name="base_green" rgba="0.066667 0.6 0.29804 1"/>
+        <material name="head_yellow" rgba="0.89804 0.82745 0.11765 1"/>
+        <material name="white" rgba="1 1 1 1"/>
 
         <mesh file="base_0.obj"/>
         <mesh file="base_1.obj"/>
@@ -56,74 +59,141 @@
         <mesh file="wrist2_1.obj"/>
         <mesh file="wrist2_2.obj"/>
         <mesh file="wrist3.obj"/>
+                <mesh file="base_link.STL"/>
+        <mesh file="body_link.STL"/>
+        <mesh file="bozi_link.STL"/>
+        <mesh file="head_link.STL"/>
+        <mesh file="camera_fixed_link.STL"/>
+        <mesh file="dh_base_link.STL"/>
+        <mesh file="dh_finger1_link.STL"/>
+        <mesh file="dh_finger2_link.STL"/>  
     </asset>
 
     <worldbody>
         <light diffuse=".5 .5 .5" pos="0 0 4" dir="0 0 -1"/>
         <!-- <geom name="floor" type="plane" size="3 3 0.1" rgba=".9 .9 .9 1"/> -->
         
-        <!-- Common world frame named 'base' -->
-        <body name="base" pos="0 0 0">
-            <!-- Optional: a visual for the world base -->
-            <!-- <geom type="sphere" size="0.05" rgba="0.5 0.5 0.5 0.5"/> -->
+
+
+             <!-- Base底盘 (连接到world) -->
+        <body name="base_link" pos="0.36  0 0" quat="0.70710678 0 0 -0.70710678 ">
+            <inertial pos="-1.4069E-17 0 0.40258" mass="400.99" diaginertia="46.843 31.456 38.411"/>
+            <geom type="mesh" mesh="base_link" material="base_green" contype="1" conaffinity="65535" group="1"/>
         </body>
 
-        <!-- Left Arm -->
-        <body name="left_robot_base" pos="0 0.275 0.3" quat="0 0 0.3826834 0.9238795" childclass="ur5e">
-            <inertial mass="4" pos="0 0 0" diaginertia="0.00443333156 0.00443333156 0.0072"/>
-            <geom mesh="base_0" material="black" class="visual"/>
-            <geom mesh="base_1" material="jointgray" class="visual"/>
-            <body name="left_shoulder_link" pos="0 0 0.163">
-                <inertial mass="3.7" pos="0 0 0" diaginertia="0.0102675 0.0102675 0.00666"/>
-                <joint name="left_shoulder_pan_joint" axis="0 0 1"/>
-                <geom mesh="shoulder_0" material="urblue" class="visual"/>
-                <geom mesh="shoulder_1" material="black" class="visual"/>
-                <geom mesh="shoulder_2" material="jointgray" class="visual"/>
-                <geom class="collision" size="0.06 0.06" pos="0 0 -0.04"/>
-                <body name="left_upper_arm_link" pos="0 0.138 0" quat="1 0 1 0">
-                    <inertial mass="8.393" pos="0 0 0.2125" diaginertia="0.133886 0.133886 0.0151074"/>
-                    <joint name="left_shoulder_lift_joint"/>
-                    <geom mesh="upperarm_0" material="linkgray" class="visual"/>
-                    <geom mesh="upperarm_1" material="black" class="visual"/>
-                    <geom mesh="upperarm_2" material="jointgray" class="visual"/>
-                    <geom mesh="upperarm_3" material="urblue" class="visual"/>
-                    <geom class="collision" pos="0 -0.04 0" quat="1 1 0 0" size="0.06 0.06"/>
-                    <geom class="collision" size="0.05 0.2" pos="0 0 0.2"/>
-                    <body name="left_forearm_link" pos="0 -0.131 0.425">
-                        <inertial mass="2.275" pos="0 0 0.196" diaginertia="0.0311796 0.0311796 0.004095"/>
-                        <joint name="left_elbow_joint" class="joint_limited"/>
-                        <geom mesh="forearm_0" material="urblue" class="visual"/>
-                        <geom mesh="forearm_1" material="linkgray" class="visual"/>
-                        <geom mesh="forearm_2" material="black" class="visual"/>
-                        <geom mesh="forearm_3" material="jointgray" class="visual"/>
-                        <geom class="collision" pos="0 0.08 0" quat="1 1 0 0" size="0.055 0.06"/>
-                        <geom class="collision" size="0.038 0.19" pos="0 0 0.2"/>
-                        <body name="left_wrist_1_link" pos="0 0 0.392" quat="1 0 1 0">
-                            <inertial mass="1.219" pos="0 0.127 0" diaginertia="0.0025599 0.0025599 0.0021942"/>
-                            <joint name="left_wrist_1_joint"/>
-                            <geom mesh="wrist1_0" material="black" class="visual"/>
-                            <geom mesh="wrist1_1" material="urblue" class="visual"/>
-                            <geom mesh="wrist1_2" material="jointgray" class="visual"/>
-                            <geom class="collision" pos="0 0.05 0" quat="1 1 0 0" size="0.04 0.07"/>
-                            <body name="left_wrist_2_link" pos="0 0.127 0">
-                                <inertial mass="1.219" pos="0 0 0.1" diaginertia="0.0025599 0.0025599 0.0021942"/>
-                                <joint name="left_wrist_2_joint" axis="0 0 1"/>
-                                <geom mesh="wrist2_0" material="black" class="visual"/>
-                                <geom mesh="wrist2_1" material="urblue" class="visual"/>
-                                <geom mesh="wrist2_2" material="jointgray" class="visual"/>
-                                <geom class="collision" size="0.04 0.06" pos="0 0 0.04"/>
-                                <geom class="collision" pos="0 0.02 0.1" quat="1 1 0 0" size="0.04 0.04"/>
-                                <body name="left_wrist_3_link" pos="0 0 0.1">
-                                    <inertial mass="0.1879" pos="0 0.0771683 0" quat="1 0 0 1" diaginertia="0.000132134 9.90863e-05 9.90863e-05"/>
-                                    <joint name="left_wrist_3_joint"/>
-                                    <geom material="linkgray" mesh="wrist3" class="visual"/>
-                                    <geom class="eef_collision" pos="0 0.08 0" quat="1 1 0 0" size="0.04 0.02"/>
-                                    <site name="left_attachment_site" size="0.01" pos="0 0.1 0" quat="-1 1 1 1" rgba="1 0 0 1" group="1"/>
-                                    <body name="left_tool0" pos="0 0.1 0" quat="0.70710678 -0.70710678 0 0">
-                                        <geom name="left_tool0_x_shaft" type="cylinder" size="0.005 0.05" pos="0.05 0 0" zaxis="1 0 0" rgba="1 0 0 1" contype="0" conaffinity="0" group="1" class="visual"/>
-                                        <geom name="left_tool0_y_shaft" type="cylinder" size="0.005 0.05" pos="0 0.05 0" zaxis="0 1 0" rgba="0 1 0 1" contype="0" conaffinity="0" group="1" class="visual"/>
-                                        <geom name="left_tool0_z_shaft" type="cylinder" size="0.005 0.05" pos="0 0 0.05" zaxis="0 0 1" rgba="0 0 1 1" contype="0" conaffinity="0" group="1" class="visual"/>
-                                        <site name="left_tool0_site" size="0.01" pos="0 0 0" rgba="0 1 0 1" group="1"/>
+                <!-- Body躯干 (连接到world) -->
+        <body name="body_base_link" pos="0 0 0.78" quat="0.70710678 0 0 0.70710678 ">
+            <inertial pos="-1.72E-06 -0.00094189 0.44814" mass="5.3997" diaginertia="0.18584 0.24302 0.069032"/>
+            <geom type="mesh" mesh="body_link" material="white" contype="4" conaffinity="4" group="1"/>
+            
+            <!-- Bozi link (连接到body_base_link) -->
+            <body name="bozi_link" pos="-0.0468 -0.045 0.91925" quat="0.5 0.5 -0.5 -0.5">
+                <inertial pos="-0.02368 -0.062099 -0.0468" mass="0.5717" diaginertia="0.0043319 0.00074141 0.0044017"/>
+                <geom type="mesh" mesh="bozi_link" material="base_green" contype="4" conaffinity="4" group="1"/>
+                
+                <!-- Head头部 (连接到bozi_link) -->
+                <body name="head_link" pos="0 0 0" quat="0.99875 0 0 0.05">
+                    <inertial pos="0.10509 0.0025699 -0.046837" mass="2.8418" diaginertia="0.02624 0.016373 0.011367"/>
+                    <geom type="mesh" mesh="head_link" material="head_yellow" contype="4" conaffinity="4" group="1"/>
+                    
+                    <!-- Camera fixed link --> 
+                    <body name="camera_fixed_link" pos="0.10034 0.16948 -0.0168" quat="0.3535339 -0.3535339 0.61237244 -0.61237244">
+                        <inertial pos="0.00017347 0.027417 0.04176" mass="0.057939" diaginertia="3.4645E-05 6.3455E-06 3.348E-05"/>
+                        <geom type="mesh" mesh="camera_fixed_link" material="base_green" contype="4" conaffinity="4" group="1"/>
+                    </body>
+                </body>
+            </body>
+
+                       <!-- Body right base (右臂安装点) -->
+            <body name="body_right_base_link" pos="-0.17475 0 0.64111" quat="0.5 0 -0.5 0.7071">
+                <inertial pos="1.446E-05 0.063848 -0.00090827" mass="0.65565" diaginertia="0.0011999 0.001589 0.001245"/>
+                <body name ="right_correct_link" pos="0 0 0" quat="0.2707 -0.2707 0.6535 0.6530">
+                    <inertial pos="1.446E-05 0.063848 -0.00090827" mass="0.65565" diaginertia="0.0011999 0.001589 0.001245"/>
+                  
+                   
+                          <!-- Right Arm -->
+                    <body name="right_robot_base" pos="0 0 0"  childclass="ur5e">
+                        <inertial mass="4" pos="0 0 0" diaginertia="0.00443333156 0.00443333156 0.0072"/>
+                        <geom mesh="base_0" material="black" class="visual"/>
+                        <geom mesh="base_1" material="jointgray" class="visual"/>
+                        <body name="right_shoulder_link" pos="0 0 0.163">
+                            <inertial mass="3.7" pos="0 0 0" diaginertia="0.0102675 0.0102675 0.00666"/>
+                            <joint name="right_shoulder_pan_joint" axis="0 0 1"/>
+                            <geom mesh="shoulder_0" material="urblue" class="visual"/>
+                            <geom mesh="shoulder_1" material="black" class="visual"/>
+                            <geom mesh="shoulder_2" material="jointgray" class="visual"/>
+                            <geom class="collision" size="0.06 0.06" pos="0 0 -0.04"/>
+                            <body name="right_upper_arm_link" pos="0 0.138 0" quat="1 0 1 0">
+                                <inertial mass="8.393" pos="0 0 0.2125" diaginertia="0.133886 0.133886 0.0151074"/>
+                                <joint name="right_shoulder_lift_joint"/>
+                                <geom mesh="upperarm_0" material="linkgray" class="visual"/>
+                                <geom mesh="upperarm_1" material="black" class="visual"/>
+                                <geom mesh="upperarm_2" material="jointgray" class="visual"/>
+                                <geom mesh="upperarm_3" material="urblue" class="visual"/>
+                                <geom class="collision" pos="0 -0.04 0" quat="1 1 0 0" size="0.06 0.06"/>
+                                <geom class="collision" size="0.05 0.2" pos="0 0 0.2"/>
+                                <body name="right_forearm_link" pos="0 -0.131 0.425">
+                                    <inertial mass="2.275" pos="0 0 0.196" diaginertia="0.0311796 0.0311796 0.004095"/>
+                                    <joint name="right_elbow_joint" class="joint_limited"/>
+                                    <geom mesh="forearm_0" material="urblue" class="visual"/>
+                                    <geom mesh="forearm_1" material="linkgray" class="visual"/>
+                                    <geom mesh="forearm_2" material="black" class="visual"/>
+                                    <geom mesh="forearm_3" material="jointgray" class="visual"/>
+                                    <geom class="collision" pos="0 0.08 0" quat="1 1 0 0" size="0.055 0.06"/>
+                                    <geom class="collision" size="0.038 0.19" pos="0 0 0.2"/>
+                                    <body name="right_wrist_1_link" pos="0 0 0.392" quat="1 0 1 0">
+                                        <inertial mass="1.219" pos="0 0.127 0" diaginertia="0.0025599 0.0025599 0.0021942"/>
+                                        <joint name="right_wrist_1_joint"/>
+                                        <geom mesh="wrist1_0" material="black" class="visual"/>
+                                        <geom mesh="wrist1_1" material="urblue" class="visual"/>
+                                        <geom mesh="wrist1_2" material="jointgray" class="visual"/>
+                                        <geom class="collision" pos="0 0.05 0" quat="1 1 0 0" size="0.04 0.07"/>
+                                        <body name="right_wrist_2_link" pos="0 0.127 0">
+                                            <inertial mass="1.219" pos="0 0 0.1" diaginertia="0.0025599 0.0025599 0.0021942"/>
+                                            <joint name="right_wrist_2_joint" axis="0 0 1"/>
+                                            <geom mesh="wrist2_0" material="black" class="visual"/>
+                                            <geom mesh="wrist2_1" material="urblue" class="visual"/>
+                                            <geom mesh="wrist2_2" material="jointgray" class="visual"/>
+                                            <geom class="collision" size="0.04 0.06" pos="0 0 0.04"/>
+                                            <geom class="collision" pos="0 0.02 0.1" quat="1 1 0 0" size="0.04 0.04"/>
+                                            <body name="right_wrist_3_link" pos="0 0 0.1">
+                                                <inertial mass="0.1879" pos="0 0.0771683 0" quat="1 0 0 1" diaginertia="0.000132134 9.90863e-05 9.90863e-05"/>
+                                                <joint name="right_wrist_3_joint"/>
+                                                <geom material="linkgray" mesh="wrist3" class="visual"/>
+                                                <geom class="eef_collision" pos="0 0.08 0" quat="1 1 0 0" size="0.04 0.02"/>
+                                                <site name="right_attachment_site" size="0.01" pos="0 0.1 0" quat="-1 1 1 1" rgba="1 0 0 1" group="1"/>
+                                                <body name="right_tool0" pos="0 0.1 0" quat="0.70710678 -0.70710678 0 0">
+                                                    <geom name="right_tool0_x_shaft" type="cylinder" size="0.005 0.05" pos="0.05 0 0" zaxis="1 0 0" rgba="1 0 0 1" contype="0" conaffinity="0" group="1" class="visual"/>
+                                                    <geom name="right_tool0_y_shaft" type="cylinder" size="0.005 0.05" pos="0 0.05 0" zaxis="0 1 0" rgba="0 1 0 1" contype="0" conaffinity="0" group="1" class="visual"/>
+                                                    <geom name="right_tool0_z_shaft" type="cylinder" size="0.005 0.05" pos="0 0 0.05" zaxis="0 0 1" rgba="0 0 1 1" contype="0" conaffinity="0" group="1" class="visual"/>
+                                                    <site name="right_tool0_site" size="0.01" pos="0 0 0" rgba="0 1 0 1" group="1"/>
+                                                                                                                                        <!-- Right Gripper (连接到right_tool0) -->
+                                                    <body name="right_dh_base_link" pos="0 0 0.006" quat="0.70710678 0 0 -0.70710678 ">
+                                                        <inertial pos="-2.97896383687117E-05 -0.00119414606853069 0.0383013066202999" mass="0.407689241604604" diaginertia="0.000382601149885368 0.000182283012175943 0.000433183926992861"/>
+                                                        <geom type="mesh" mesh="dh_base_link" material="white" contype="1" conaffinity="65535" group="1"/>
+                                                        
+                                                        <!-- Right finger 1 -->
+                                                        <body name="right_dh_finger1_link" pos="0.0184 0.0 0.09325" quat="0.70710678 0 0 0.70710678">
+                                                            <inertial pos="0.00194790394990391 0.00918650753677023 0.00947748977599767" mass="0.0589543896992846" diaginertia="2.37128965154064E-05 3.37272907966156E-05 1.98369145830284E-05"/>
+                                                            <joint name="right_dh_base_finger1_joint" type="slide" axis="-1 0 0" range="0 0.04" damping="50" frictionloss="10" armature="0.1"/>
+                                                            <geom type="mesh" mesh="dh_finger1_link" material="white" contype="1" conaffinity="65535" group="1"/>
+                                                        </body>
+                                                        
+                                                        <!-- Right finger 2 -->
+                                                        <body name="right_dh_finger2_link" pos="-0.0184 0.0 0.09325" quat="-0.70710678 0 0 0.70710678">
+                                                            <inertial pos="0.00194790394990389 0.00918650753677023 0.00947748977599765" mass="0.0589543896992846" diaginertia="2.37128965154064E-05 3.37272907966157E-05 1.98369145830284E-05"/>
+                                                            <joint name="right_dh_base_finger2_joint" type="slide" axis="-1 0 0" range="0 0.04" damping="50" frictionloss="10" armature="0.1"/>
+                                                            <geom type="mesh" mesh="dh_finger2_link" material="white" contype="1" conaffinity="65535" group="1"/>
+                                                        </body>
+                                                        
+                                                        <!-- Right gripper center -->
+                                                        <body name="right_dh_center_link" pos="0 0 0.14124" quat="0.70710678 -0.70710678 0 0">
+                                                            <site name="right_gripper_center" pos="0 0 0" size="0.01" rgba="0 1 0 1"/>
+                                                        </body>
+                                                    </body>
+                                                </body>
+                                            </body>
+                                        </body>
                                     </body>
                                 </body>
                             </body>
@@ -131,71 +201,110 @@
                     </body>
                 </body>
             </body>
-        </body>
-        <!-- Right Arm -->
-        <body name="right_robot_base" pos="0 -0.275 0.3" quat="0.92387953 0.38268343 0. 0." childclass="ur5e">
-            <inertial mass="4" pos="0 0 0" diaginertia="0.00443333156 0.00443333156 0.0072"/>
-            <geom mesh="base_0" material="black" class="visual"/>
-            <geom mesh="base_1" material="jointgray" class="visual"/>
-            <body name="right_shoulder_link" pos="0 0 0.163">
-                <inertial mass="3.7" pos="0 0 0" diaginertia="0.0102675 0.0102675 0.00666"/>
-                <joint name="right_shoulder_pan_joint" axis="0 0 1"/>
-                <geom mesh="shoulder_0" material="urblue" class="visual"/>
-                <geom mesh="shoulder_1" material="black" class="visual"/>
-                <geom mesh="shoulder_2" material="jointgray" class="visual"/>
-                <geom class="collision" size="0.06 0.06" pos="0 0 -0.04"/>
-                <body name="right_upper_arm_link" pos="0 0.138 0" quat="1 0 1 0">
-                    <inertial mass="8.393" pos="0 0 0.2125" diaginertia="0.133886 0.133886 0.0151074"/>
-                    <joint name="right_shoulder_lift_joint"/>
-                    <geom mesh="upperarm_0" material="linkgray" class="visual"/>
-                    <geom mesh="upperarm_1" material="black" class="visual"/>
-                    <geom mesh="upperarm_2" material="jointgray" class="visual"/>
-                    <geom mesh="upperarm_3" material="urblue" class="visual"/>
-                    <geom class="collision" pos="0 -0.04 0" quat="1 1 0 0" size="0.06 0.06"/>
-                    <geom class="collision" size="0.05 0.2" pos="0 0 0.2"/>
-                    <body name="right_forearm_link" pos="0 -0.131 0.425">
-                        <inertial mass="2.275" pos="0 0 0.196" diaginertia="0.0311796 0.0311796 0.004095"/>
-                        <joint name="right_elbow_joint" class="joint_limited"/>
-                        <geom mesh="forearm_0" material="urblue" class="visual"/>
-                        <geom mesh="forearm_1" material="linkgray" class="visual"/>
-                        <geom mesh="forearm_2" material="black" class="visual"/>
-                        <geom mesh="forearm_3" material="jointgray" class="visual"/>
-                        <geom class="collision" pos="0 0.08 0" quat="1 1 0 0" size="0.055 0.06"/>
-                        <geom class="collision" size="0.038 0.19" pos="0 0 0.2"/>
-                        <body name="right_wrist_1_link" pos="0 0 0.392" quat="1 0 1 0">
-                            <inertial mass="1.219" pos="0 0.127 0" diaginertia="0.0025599 0.0025599 0.0021942"/>
-                            <joint name="right_wrist_1_joint"/>
-                            <geom mesh="wrist1_0" material="black" class="visual"/>
-                            <geom mesh="wrist1_1" material="urblue" class="visual"/>
-                            <geom mesh="wrist1_2" material="jointgray" class="visual"/>
-                            <geom class="collision" pos="0 0.05 0" quat="1 1 0 0" size="0.04 0.07"/>
-                            <body name="right_wrist_2_link" pos="0 0.127 0">
-                                <inertial mass="1.219" pos="0 0 0.1" diaginertia="0.0025599 0.0025599 0.0021942"/>
-                                <joint name="right_wrist_2_joint" axis="0 0 1"/>
-                                <geom mesh="wrist2_0" material="black" class="visual"/>
-                                <geom mesh="wrist2_1" material="urblue" class="visual"/>
-                                <geom mesh="wrist2_2" material="jointgray" class="visual"/>
-                                <geom class="collision" size="0.04 0.06" pos="0 0 0.04"/>
-                                <geom class="collision" pos="0 0.02 0.1" quat="1 1 0 0" size="0.04 0.04"/>
-                                <body name="right_wrist_3_link" pos="0 0 0.1">
-                                    <inertial mass="0.1879" pos="0 0.0771683 0" quat="1 0 0 1" diaginertia="0.000132134 9.90863e-05 9.90863e-05"/>
-                                    <joint name="right_wrist_3_joint"/>
-                                    <geom material="linkgray" mesh="wrist3" class="visual"/>
-                                    <geom class="eef_collision" pos="0 0.08 0" quat="1 1 0 0" size="0.04 0.02"/>
-                                    <site name="right_attachment_site" size="0.01" pos="0 0.1 0" quat="-1 1 1 1" rgba="1 0 0 1" group="1"/>
-                                    <body name="right_tool0" pos="0 0.1 0" quat="0.70710678 -0.70710678 0 0">
-                                        <geom name="right_tool0_x_shaft" type="cylinder" size="0.005 0.05" pos="0.05 0 0" zaxis="1 0 0" rgba="1 0 0 1" contype="0" conaffinity="0" group="1" class="visual"/>
-                                        <geom name="right_tool0_y_shaft" type="cylinder" size="0.005 0.05" pos="0 0.05 0" zaxis="0 1 0" rgba="0 1 0 1" contype="0" conaffinity="0" group="1" class="visual"/>
-                                        <geom name="right_tool0_z_shaft" type="cylinder" size="0.005 0.05" pos="0 0 0.05" zaxis="0 0 1" rgba="0 0 1 1" contype="0" conaffinity="0" group="1" class="visual"/>
-                                        <site name="right_tool0_site" size="0.01" pos="0 0 0" rgba="0 1 0 1" group="1"/>
+            
+                    <!-- Body left base (左臂安装点) -->
+            <body name="body_left_base_link" pos="0.18182 0 0.63404" quat="0.5 0 0.5 -0.7071">
+                <inertial pos="1.446E-05 0.053848 -0.00090827" mass="0.65565" diaginertia="0.0011999 0.001589 0.001245"/>
+                <body name="left_correct_link" pos="0 0 0" quat="0.2707 -0.2707 -0.6535 -0.6530">
+                    <inertial pos="1.446E-05 0.053848 -0.00090827" mass="0.65565" diaginertia="0.0011999 0.001589 0.001245"/>
+                   
+                
+                <!-- Left Arm -->
+                    <body name="left_robot_base" pos="0 0 0" childclass="ur5e">
+                        <inertial mass="4" pos="0 0 0" diaginertia="0.00443333156 0.00443333156 0.0072"/>
+                        <geom mesh="base_0" material="black" class="visual"/>
+                        <geom mesh="base_1" material="jointgray" class="visual"/>
+                        <body name="left_shoulder_link" pos="0 0 0.163">
+                            <inertial mass="3.7" pos="0 0 0" diaginertia="0.0102675 0.0102675 0.00666"/>
+                            <joint name="left_shoulder_pan_joint" axis="0 0 1"/>
+                            <geom mesh="shoulder_0" material="urblue" class="visual"/>
+                            <geom mesh="shoulder_1" material="black" class="visual"/>
+                            <geom mesh="shoulder_2" material="jointgray" class="visual"/>
+                            <geom class="collision" size="0.06 0.06" pos="0 0 -0.04"/>
+                            <body name="left_upper_arm_link" pos="0 0.138 0" quat="1 0 1 0">
+                                <inertial mass="8.393" pos="0 0 0.2125" diaginertia="0.133886 0.133886 0.0151074"/>
+                                <joint name="left_shoulder_lift_joint"/>
+                                <geom mesh="upperarm_0" material="linkgray" class="visual"/>
+                                <geom mesh="upperarm_1" material="black" class="visual"/>
+                                <geom mesh="upperarm_2" material="jointgray" class="visual"/>
+                                <geom mesh="upperarm_3" material="urblue" class="visual"/>
+                                <geom class="collision" pos="0 -0.04 0" quat="1 1 0 0" size="0.06 0.06"/>
+                                <geom class="collision" size="0.05 0.2" pos="0 0 0.2"/>
+                                <body name="left_forearm_link" pos="0 -0.131 0.425">
+                                    <inertial mass="2.275" pos="0 0 0.196" diaginertia="0.0311796 0.0311796 0.004095"/>
+                                    <joint name="left_elbow_joint" class="joint_limited"/>
+                                    <geom mesh="forearm_0" material="urblue" class="visual"/>
+                                    <geom mesh="forearm_1" material="linkgray" class="visual"/>
+                                    <geom mesh="forearm_2" material="black" class="visual"/>
+                                    <geom mesh="forearm_3" material="jointgray" class="visual"/>
+                                    <geom class="collision" pos="0 0.08 0" quat="1 1 0 0" size="0.055 0.06"/>
+                                    <geom class="collision" size="0.038 0.19" pos="0 0 0.2"/>
+                                    <body name="left_wrist_1_link" pos="0 0 0.392" quat="1 0 1 0">
+                                        <inertial mass="1.219" pos="0 0.127 0" diaginertia="0.0025599 0.0025599 0.0021942"/>
+                                        <joint name="left_wrist_1_joint"/>
+                                        <geom mesh="wrist1_0" material="black" class="visual"/>
+                                        <geom mesh="wrist1_1" material="urblue" class="visual"/>
+                                        <geom mesh="wrist1_2" material="jointgray" class="visual"/>
+                                        <geom class="collision" pos="0 0.05 0" quat="1 1 0 0" size="0.04 0.07"/>
+                                        <body name="left_wrist_2_link" pos="0 0.127 0">
+                                            <inertial mass="1.219" pos="0 0 0.1" diaginertia="0.0025599 0.0025599 0.0021942"/>
+                                            <joint name="left_wrist_2_joint" axis="0 0 1"/>
+                                            <geom mesh="wrist2_0" material="black" class="visual"/>
+                                            <geom mesh="wrist2_1" material="urblue" class="visual"/>
+                                            <geom mesh="wrist2_2" material="jointgray" class="visual"/>
+                                            <geom class="collision" size="0.04 0.06" pos="0 0 0.04"/>
+                                            <geom class="collision" pos="0 0.02 0.1" quat="1 1 0 0" size="0.04 0.04"/>
+                                            <body name="left_wrist_3_link" pos="0 0 0.1">
+                                                <inertial mass="0.1879" pos="0 0.0771683 0" quat="1 0 0 1" diaginertia="0.000132134 9.90863e-05 9.90863e-05"/>
+                                                <joint name="left_wrist_3_joint"/>
+                                                <geom material="linkgray" mesh="wrist3" class="visual"/>
+                                                <geom class="eef_collision" pos="0 0.08 0" quat="1 1 0 0" size="0.04 0.02"/>
+                                                <site name="left_attachment_site" size="0.01" pos="0 0.1 0" quat="-1 1 1 1" rgba="1 0 0 1" group="1"/>
+                                                <body name="left_tool0" pos="0 0.1 0" quat="0.70710678 -0.70710678 0 0">
+                                                    <geom name="left_tool0_x_shaft" type="cylinder" size="0.005 0.05" pos="0.05 0 0" zaxis="1 0 0" rgba="1 0 0 1" contype="0" conaffinity="0" group="1" class="visual"/>
+                                                    <geom name="left_tool0_y_shaft" type="cylinder" size="0.005 0.05" pos="0 0.05 0" zaxis="0 1 0" rgba="0 1 0 1" contype="0" conaffinity="0" group="1" class="visual"/>
+                                                    <geom name="left_tool0_z_shaft" type="cylinder" size="0.005 0.05" pos="0 0 0.05" zaxis="0 0 1" rgba="0 0 1 1" contype="0" conaffinity="0" group="1" class="visual"/>
+                                                    <site name="left_tool0_site" size="0.01" pos="0 0 0" rgba="0 1 0 1" group="1"/>
+                                                                                                                                        <!-- Left Gripper (连接到left_tool0) -->
+                                                    <body name="left_dh_base_link" pos="0 0 0.006" quat="0.70710678 0 0 -0.70710678 ">
+                                                        <inertial pos="-2.97896383687117E-05 -0.00119414606853069 0.0383013066202999" mass="0.407689241604604" diaginertia="0.000382601149885368 0.000182283012175943 0.000433183926992861"/>
+                                                        <geom type="mesh" mesh="dh_base_link" material="white" contype="1" conaffinity="65535" group="1"/>
+                                                        
+                                                        <!-- Left finger 1 -->
+                                                        <body name="left_dh_finger1_link" pos="0.0184 0.0 0.09325" quat="0.70710678 0 0 0.70710678">
+                                                            <inertial pos="0.00194790394990391 0.00918650753677023 0.00947748977599767" mass="0.0589543896992846" diaginertia="2.37128965154064E-05 3.37272907966156E-05 1.98369145830284E-05"/>
+                                                            <joint name="left_dh_base_finger1_joint" type="slide" axis="-1 0 0" range="0 0.04" damping="50" frictionloss="10" armature="0.1"/>
+                            
+                                                            <geom type="mesh" mesh="dh_finger1_link" material="white" contype="1" conaffinity="65535" group="1"/>
+                                                        </body>
+                                                        
+                                                        <!-- Left finger 2 -->
+                                                        <body name="left_dh_finger2_link" pos="-0.0184 0.0 0.09325" quat="-0.70710678 0 0 0.70710678">
+                                                            <inertial pos="0.00194790394990389 0.00918650753677023 0.00947748977599765" mass="0.0589543896992846" diaginertia="2.37128965154064E-05 3.37272907966157E-05 1.98369145830284E-05"/>
+                                                            <joint name="left_dh_base_finger2_joint" type="slide" axis="-1 0 0" range="0 0.04" damping="50" frictionloss="10" armature="0.1"/>
+                                                            <geom type="mesh" mesh="dh_finger2_link" material="white" contype="1" conaffinity="65535" group="1"/>
+                                                        </body>
+                                                        
+                                                        <!-- Left gripper center -->
+                                                        <body name="left_dh_center_link" pos="0 0 0.14124" quat="0.70710678 -0.70710678 0 0">
+                                                            <site name="left_gripper_center" pos="0 0 0" size="0.01" rgba="0 1 0 1"/>
+                                                        </body>
+                                                    </body>
+                                                </body>
+                                            </body>
+                                        </body>
                                     </body>
                                 </body>
                             </body>
                         </body>
                     </body>
+
                 </body>
             </body>
+
         </body>
+ 
+ 
 
 
     </worldbody>
@@ -215,12 +324,19 @@
         <position class="position_small" name="right_wrist_1_joint" joint="right_wrist_1_joint"/>
         <position class="position_small" name="right_wrist_2_joint" joint="right_wrist_2_joint"/>
         <position class="position_small" name="right_wrist_3_joint" joint="right_wrist_3_joint"/>
+              <!-- Gripper Actuators -->
+        <position name="left_gripper" joint="left_dh_base_finger1_joint" kp="2000" kv="50" ctrlrange="0 0.04" forcelimited="true" forcerange="-80 80"/>
+        <position name="right_gripper" joint="right_dh_base_finger1_joint" kp="2000" kv="50" ctrlrange="0 0.04" forcelimited="true" forcerange="-80 80"/>
     </actuator>
-
+    <equality>
+        <!-- Gripper finger synchronization -->
+        <joint joint1="left_dh_base_finger1_joint" joint2="left_dh_base_finger2_joint" polycoef="0 1 0 0 0"/>
+        <joint joint1="right_dh_base_finger1_joint" joint2="right_dh_base_finger2_joint" polycoef="0 1 0 0 0"/>
+    </equality>
     <keyframe>
         <key name="home"
-                 qpos="2.88433112 -0.82903139  2.07572008 -0.67998028  1.52733763  2.61031443 3.3777357  -2.86530703 -1.99002441  1.0124655   1.77796691 -2.41553568"
-                 ctrl="2.88433112 -0.82903139  2.07572008 -0.67998028  1.52733763  2.61031443 3.3777357  -2.86530703 -1.99002441  1.0124655   1.77796691 -2.41553568"/>
+                 qpos=" 1.18 -1.02 1.49 5.35 2.57 -0.557 0   0  -1.2 -2.03 -1.58 -2.03 3.73 0.754  0 0"
+                 ctrl="1.18 -1.02 1.49 5.35 2.57 -0.557 0 -1.2 -2.03 -1.58 -2.03 3.73 0.754      0"/>
         <key name="zero"
                  qpos="0 0 0 0 0 0 0 0 0 0 0 0"
                  ctrl="0 0 0 0 0 0 0 0 0 0 0 0"/>

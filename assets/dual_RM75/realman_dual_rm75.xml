@@ -1,0 +1,271 @@
+<?xml version="1.0" ?>
+<mujoco model="realman_dual_rm75">
+  <compiler angle="radian"/>
+
+  <asset>
+    <!-- Base meshes (paths are relative to this file location) -->
+    <mesh name="rm_base_link" file="meshes/body/body_base_link.STL"/>
+    <mesh name="rm_l1"        file="meshes/body/l1.STL"/>
+    <mesh name="rm_l2"        file="meshes/body/l2.STL"/>
+
+    <!-- RM75 robot meshes (shared by left/right) -->
+    <material name="white" specular="0.5" shininess="0.25" rgba="1 1 1 1"/>
+    <mesh name="base_link" file="meshes/base_link.STL"/>
+    <mesh name="Link1" file="meshes/link1.STL"/>
+    <mesh name="Link2" file="meshes/link2.STL"/>
+    <mesh name="Link3" file="meshes/link3.STL"/>
+    <mesh name="Link4" file="meshes/link4.STL"/>
+    <mesh name="Link5" file="meshes/link5.STL"/>
+    <mesh name="Link6" file="meshes/link6.STL"/>
+    <mesh name="Link7" file="meshes/link7_6f.STL"/>
+
+      <!-- DH PGI Gripper meshes (shared by left/right) -->
+    <mesh name="dh_base_link" file="meshes/dh_base_link.STL"/>
+    <mesh name="dh_finger1_link" file="meshes/dh_finger1_link.STL"/>
+    <mesh name="dh_finger2_link" file="meshes/dh_finger2_link.STL"/>
+  </asset>
+     
+  <!-- <actuator>
+  
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="left_joint1" name="left_torq_j1"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="left_joint2" name="left_torq_j2"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="left_joint3" name="left_torq_j3"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="left_joint4" name="left_torq_j4"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="left_joint5" name="left_torq_j5"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="left_joint6" name="left_torq_j6"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="left_joint7" name="left_torq_j7"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="right_joint1" name="right_torq_j1"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="right_joint2" name="right_torq_j2"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="right_joint3" name="right_torq_j3"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="right_joint4" name="right_torq_j4"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="right_joint5" name="right_torq_j5"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="right_joint6" name="right_torq_j6"/>
+    <motor ctrllimited="true" ctrlrange="-100 100" joint="right_joint7" name="right_torq_j7"/>
+  </actuator> -->
+
+    <actuator>  
+    <!-- Position-servo actuators for Left arm (position control, ctrl = desired joint angle) -->
+    <position joint="left_joint1" kp="1500" ctrlrange="-3.107 3.107" name="left_pos_j1"/>
+    <position joint="left_joint2" kp="1500" ctrlrange="-2.269 2.269" name="left_pos_j2"/>
+    <position joint="left_joint3" kp="1500" ctrlrange="-3.107 3.107" name="left_pos_j3"/>
+    <position joint="left_joint4" kp="800" ctrlrange="-2.356 2.356" name="left_pos_j4"/>
+    <position joint="left_joint5" kp="800" ctrlrange="-3.107 3.107" name="left_pos_j5"/>
+    <position joint="left_joint6" kp="800" ctrlrange="-2.234 2.234" name="left_pos_j6"/>
+    <position joint="left_joint7" kp="800" ctrlrange="-6.283 6.283" name="left_pos_j7"/>
+
+    <!-- Position-servo actuators for Right arm -->
+    <position joint="right_joint1" kp="1500" ctrlrange="-3.107 3.107" name="right_pos_j1"/>
+    <position joint="right_joint2" kp="1500" ctrlrange="-2.269 2.269" name="right_pos_j2"/>
+    <position joint="right_joint3" kp="1500" ctrlrange="-3.107 3.107" name="right_pos_j3"/>
+    <position joint="right_joint4" kp="800" ctrlrange="-2.356 2.356" name="right_pos_j4"/>
+    <position joint="right_joint5" kp="800" ctrlrange="-3.107 3.107" name="right_pos_j5"/>
+    <position joint="right_joint6" kp="800" ctrlrange="-2.234 2.234" name="right_pos_j6"/>
+    <position joint="right_joint7" kp="800" ctrlrange="-6.283 6.283" name="right_pos_j7"/>
+
+        <!-- Gripper actuators for Left arm -->
+    <position joint="left_dh_base_finger1_joint" kp="2000" kv="50" ctrlrange="0 0.04" name="left_gripper" forcelimited="true" forcerange="-80 80"/>
+    <!-- <position joint="left_dh_base_finger2_joint" kp="1000" ctrlrange="0 0.04" name="left_gripper_finger2" forcelimited="true" forcerange="-20 20"/> -->
+
+    <!-- Gripper actuators for Right arm -->
+    <position joint="right_dh_base_finger1_joint" kp="2000" kv="50" ctrlrange="0 0.04" name="right_gripper" forcelimited="true" forcerange="-80 80"/>
+    <!-- <position joint="right_dh_base_finger2_joint" kp="1000" ctrlrange="0 0.04" name="right_gripper_finger2" forcelimited="true" forcerange="-20 20"/> -->
+  </actuator>
+
+  <worldbody>
+
+    <!-- Base at world origin -->
+    <body name="realman_base" pos="0 0 0 " quat="0 0 0 1">  <!--1.16 -0.25 0.490696-->
+      <!-- Inertial from URDF base_link -->
+      <inertial pos="0 0 0.3907" mass="8.753" diaginertia="0.20513 0.20257 0.3547"/>
+      <!-- Base visual -->
+      <geom name="base_link_vis" type="mesh" mesh="rm_base_link" contype="0" conaffinity="0" group="1" rgba="0.79216 0.81961 0.93333 1"/>
+
+      <!-- Shoulder mount that now hosts RIGHT RM75 (original在 l2 的位置改为 l1 并挂右臂) -->
+      <body name="l1" pos="0.125000000000004 0 0.93" quat="0.5 0.5 0.5 0.5">
+        <geom name="l1_vis" type="mesh" mesh="rm_l2" contype="0" conaffinity="0" group="1" rgba="1 1 1 1"/>
+
+        <!-- RIGHT RM75 (挂在 l1) -->
+        <body name="right_base" pos="0 0 0" quat="0.7071 0 0 0.7071">
+          <body name="right_base_link" pos="0 0 0">
+            <inertial pos="0.00043296 3.5291e-05 0.059942" mass="0.84105" diaginertia="0.0017261 0.0017099 0.00090402"/>
+            <geom mesh="base_link" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+            <body name="right_Link1" pos="0 0 0.2405" quat="0.7071054825 -0.7071080799 0 0">
+              <inertial pos="-2.1376e-07 0.025186 -0.021108" mass="0.59356" diaginertia="0.0012661 0.00056135 0.0011817"/>
+              <joint name="right_joint1" axis="0 -1 0" limited="true" range="-3.107 3.107" damping="50.0" frictionloss="1"/>
+              <geom mesh="Link1" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+              <body name="right_Link2" pos="0 0 0" quat="0.7071054825 0.7071080799 0 0">
+                <inertial pos="4.1111e-07 0.011078 0.076129" mass="0.43285" diaginertia="0.0012584 0.0012225 0.00031747"/>
+                <joint name="right_joint2" axis="0 1 0" limited="true" range="-2.269 2.269" damping="50.0" frictionloss="1"/>
+                <geom mesh="Link2" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                <body name="right_Link3" pos="0 0 0.256" quat="0.7071054825 -0.7071080799 0 0">
+                  <inertial pos="-4.7932e-07 0.027347 -0.023544" mass="0.43132" diaginertia="0.00079433 0.00031507 0.00073037"/>
+                  <joint name="right_joint3" axis="0 -1 0" limited="true" range="-3.107 3.107" damping="50.0" frictionloss="1"/>
+                  <geom mesh="Link3" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                  <body name="right_Link4" pos="0 0 0" quat="0.7071054825 0.7071080799 0 0">
+                    <inertial pos="5.0444e-06 0.010569 0.059593" mass="0.28963" diaginertia="0.00063737 0.00061418 0.00015648"/>
+                    <joint name="right_joint4" axis="0 1 0" limited="true" range="-2.356 2.356" damping="50.0" frictionloss="1"/>
+                    <geom mesh="Link4" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                    <body name="right_Link5" pos="0 0 0.21" quat="0.7071054825 -0.7071080799 0 0">
+                      <inertial pos="1.1466e-06 0.021541 -0.018041" mass="0.23941" diaginertia="0.00028594 0.00011989 0.00026273"/>
+                      <joint name="right_joint5" axis="0 -1 0" limited="true" range="-3.107 3.107" damping="50.0" frictionloss="1"/>
+                      <geom mesh="Link5" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                      <body name="right_Link6" pos="0 0 0" quat="0.7071054825 0.7071080799 0 0">
+                        <inertial pos="4.5754e-06 0.0073681 0.059382" mass="0.21879" diaginertia="0.00035053 0.00033447 0.00010492"/>
+                        <joint name="right_joint6" axis="0 1 0" limited="true" range="-2.234 2.234" damping="50.0" frictionloss="1"/>
+                        <geom mesh="Link6" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                        <body name="right_Link7" pos="0 0 0.1725" quat="1 0 0 0">
+                          <inertial pos="0.00032231 -0.0001782 -0.028676" mass="0.0649018034311231" diaginertia="3.6119e-05 3.4626e-05 6.1463e-05"/>
+                          <joint name="right_joint7" axis="0 0 1" limited="true" range="-6.283 6.283" damping="50.0" frictionloss="1"/>
+                          <geom mesh="Link7" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                          <body name="right_tool0" pos="0 0 0" quat="1 0 0 0">
+                          <!-- tool0 axes (target visualization) -->
+                          <geom name="right_tool0_x_shaft" type="cylinder" size="0.005 0.05" pos="0.05 0 0" zaxis="1 0 0"
+                                rgba="1 0 0 1" contype="0" conaffinity="0" group="1"/>
+                          <geom name="right_tool0_y_shaft" type="cylinder" size="0.005 0.05" pos="0 0.05 0" zaxis="0 1 0"
+                                rgba="0 1 0 1" contype="0" conaffinity="0" group="1"/>
+                          <geom name="right_tool0_z_shaft" type="cylinder" size="0.005 0.05" pos="0 0 0.05" zaxis="0 0 1"
+                                rgba="0 0 1 1" contype="0" conaffinity="0" group="1"/>
+                          <site name="right_tool0_site" size="0.01" pos="0 0 0" rgba="0 1 0 1" group="1"/>
+
+                          <!-- RIGHT Gripper (DH PGI) mounted on Link7 -->
+                            <body name="right_dh_base_link" pos="0 0 0" quat="1 0 0 0">
+                              <inertial pos="-2.97896383687117E-05 -0.00119414606853069 0.0383013066202999" mass="0.407689241604604" diaginertia="0.000382601149885368 0.000182283012175943 0.000433183926992861"/>
+                              <geom name="right_dh_base" type="mesh" mesh="dh_base_link" contype="1" conaffinity="0" material="white" group="1"/>
+                              
+                              <!-- Right finger 1 -->
+                              <body name="right_dh_finger1_link" pos="0.0184 0.0 0.09325" quat="0.7071067811865476 0 0 0.7071067811865476">
+                                <inertial pos="0.00194790394990391 0.00918650753677023 0.00947748977599767" mass="0.0589543896992846" diaginertia="2.37128965154064E-05 3.37272907966156E-05 1.98369145830284E-05"/>
+                                <joint name="right_dh_base_finger1_joint" type="slide" axis="-1 0 0" limited="true" range="0 0.04" damping="200" frictionloss="10" armature="0.1"/>
+                                <geom name="right_dh_finger1" type="mesh" mesh="dh_finger1_link" contype="1" conaffinity="0" material="white" group="1"/>
+                              </body>
+                              
+                              <!-- Right finger 2 -->
+                              <body name="right_dh_finger2_link" pos="-0.0184 0.0 0.09325" quat="-0.7071067811865476 0 0 0.7071067811865476">
+                                <inertial pos="0.00194790394990389 0.00918650753677023 0.00947748977599765" mass="0.0589543896992846" diaginertia="2.37128965154064E-05 3.37272907966157E-05 1.98369145830284E-05"/>
+                                <joint name="right_dh_base_finger2_joint" type="slide" axis="-1 0 0" limited="true" range="0 0.04" damping="200" frictionloss="10" armature="0.1"/>
+                                <geom name="right_dh_finger2" type="mesh" mesh="dh_finger2_link" contype="1" conaffinity="0" material="white" group="1"/>
+                              </body>
+                              
+                              <!-- Right gripper center site -->
+                              <body name="right_dh_center_link" pos="0 0 0.14124" quat="0.7071067811865476 -0.7071067811865476 0 0">
+                                <site name="right_gripper_center" pos="0 0 0" size="0.01" rgba="0 1 0 1"/>
+                              </body>
+                            </body>
+                          </body>
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- Shoulder mount that now hosts LEFT RM75 (原来 l1 的位置改为 l2 并挂左臂) -->
+      <body name="l2" pos=" -0.124999999999995 0 0.93" quat="0.5 0.5 -0.5 -0.5">
+        <geom name="l2_vis" type="mesh" mesh="rm_l1" contype="0" conaffinity="0" group="1" rgba="1 1 1 1"/>
+
+        <!-- LEFT RM75 (挂在 l2) -->
+        <body name="left_base" pos="0 0 0"  quat="0.7071 0 0 0.7071">
+          <body name="left_base_link" pos="0 0 0">
+            <inertial pos="0.00043296 3.5291e-05 0.059942" mass="0.84105" diaginertia="0.0017261 0.0017099 0.00090402"/>
+            <geom mesh="base_link" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+            <body name="left_Link1" pos="0 0 0.2405" quat="0.7071054825 -0.7071080799 0 0">
+              <inertial pos="-2.1376e-07 0.025186 -0.021108" mass="0.59356" diaginertia="0.0012661 0.00056135 0.0011817"/>
+              <joint name="left_joint1" axis="0 -1 0" limited="true" range="-3.107 3.107" damping="50.0" frictionloss="1"/>
+              <geom mesh="Link1" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+              <body name="left_Link2" pos="0 0 0" quat="0.7071054825 0.7071080799 0 0">
+                <inertial pos="4.1111e-07 0.011078 0.076129" mass="0.43285" diaginertia="0.0012584 0.0012225 0.00031747"/>
+                <joint name="left_joint2" axis="0 1 0" limited="true" range="-2.269 2.269" damping="50.0" frictionloss="1"/>
+                <geom mesh="Link2" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                <body name="left_Link3" pos="0 0 0.256" quat="0.7071054825 -0.7071080799 0 0">
+                  <inertial pos="-4.7932e-07 0.027347 -0.023544" mass="0.43132" diaginertia="0.00079433 0.00031507 0.00073037"/>
+                  <joint name="left_joint3" axis="0 -1 0" limited="true" range="-3.107 3.107" damping="50.0" frictionloss="1"/>
+                  <geom mesh="Link3" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                  <body name="left_Link4" pos="0 0 0" quat="0.7071054825 0.7071080799 0 0">
+                    <inertial pos="5.0444e-06 0.010569 0.059593" mass="0.28963" diaginertia="0.00063737 0.00061418 0.00015648"/>
+                    <joint name="left_joint4" axis="0 1 0" limited="true" range="-2.356 2.356" damping="50.0" frictionloss="1"/>
+                    <geom mesh="Link4" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                    <body name="left_Link5" pos="0 0 0.21" quat="0.7071054825 -0.7071080799 0 0">
+                      <inertial pos="1.1466e-06 0.021541 -0.018041" mass="0.23941" diaginertia="0.00028594 0.00011989 0.00026273"/>
+                      <joint name="left_joint5" axis="0 -1 0" limited="true" range="-3.107 3.107" damping="50.0" frictionloss="1"/>
+                      <geom mesh="Link5" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                      <body name="left_Link6" pos="0 0 0" quat="0.7071054825 0.7071080799 0 0">
+                        <inertial pos="4.5754e-06 0.0073681 0.059382" mass="0.21879" diaginertia="0.00035053 0.00033447 0.00010492"/>
+                        <joint name="left_joint6" axis="0 1 0" limited="true" range="-2.234 2.234" damping="50.0" frictionloss="1"/>
+                        <geom mesh="Link6" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                        <body name="left_Link7" pos="0 0 0.1725" quat="1 0 0 0">
+                          <inertial pos="0.00032231 -0.0001782 -0.028676" mass="0.0649018034311231" diaginertia="3.6119e-05 3.4626e-05 6.1463e-05"/>
+                          <joint name="left_joint7" axis="0 0 1" limited="true" range="-6.283 6.283" damping="50.0" frictionloss="1"/>
+                          <geom mesh="Link7" type="mesh" contype="1" conaffinity="1" material="white" group="1"/>
+                          <body name="left_tool0" pos="0 0 0" quat="1 0 0 0">
+                            <!-- tool0 axes (target visualization) -->
+                            <geom name="left_tool0_x_shaft" type="cylinder" size="0.005 0.05" pos="0.05 0 0" zaxis="1 0 0"
+                                  rgba="1 0 0 1" contype="0" conaffinity="0" group="1"/>
+                            <geom name="left_tool0_y_shaft" type="cylinder" size="0.005 0.05" pos="0 0.05 0" zaxis="0 1 0"
+                                  rgba="0 1 0 1" contype="0" conaffinity="0" group="1"/>
+                            <geom name="left_tool0_z_shaft" type="cylinder" size="0.005 0.05" pos="0 0 0.05" zaxis="0 0 1"
+                                  rgba="0 0 1 1" contype="0" conaffinity="0" group="1"/>
+                            <site name="left_tool0_site" size="0.01" pos="0 0 0" rgba="0 1 0 1" group="1"/>
+
+                            <!-- LEFT Gripper (DH PGI) mounted on Link7 -->
+                           <body name="left_dh_base_link" pos="0 0 0" quat="1 0 0 0">
+                            <inertial pos="-2.97896383687117E-05 -0.00119414606853069 0.0383013066202999" mass="0.407689241604604" diaginertia="0.000382601149885368 0.000182283012175943 0.000433183926992861"/>
+                            <geom name="left_dh_base" type="mesh" mesh="dh_base_link" contype="1" conaffinity="0" material="white" group="1"/>
+                            
+                              <!-- Left finger 1 -->
+                              <body name="left_dh_finger1_link" pos="0.0184 0.0 0.09325" quat="0.7071067811865476 0 0 0.7071067811865476">
+                                <inertial pos="0.00194790394990391 0.00918650753677023 0.00947748977599767" mass="0.0589543896992846" diaginertia="2.37128965154064E-05 3.37272907966156E-05 1.98369145830284E-05"/>
+                                <joint name="left_dh_base_finger1_joint" type="slide" axis="-1 0 0" limited="true" range="0 0.04" damping="200" frictionloss="10" armature="0.1"/>
+                                <geom name="left_dh_finger1" type="mesh" mesh="dh_finger1_link" contype="1" conaffinity="0" material="white" group="1"/>
+                              </body>
+                              
+                              <!-- Left finger 2 -->
+                              <body name="left_dh_finger2_link" pos="-0.0184 0.0 0.09325" quat="-0.7071067811865476 0 0 0.7071067811865476">
+                                <inertial pos="0.00194790394990389 0.00918650753677023 0.00947748977599765" mass="0.0589543896992846" diaginertia="2.37128965154064E-05 3.37272907966157E-05 1.98369145830284E-05"/>
+                                <joint name="left_dh_base_finger2_joint" type="slide" axis="-1 0 0" limited="true" range="0 0.04" damping="200" frictionloss="10" armature="0.1"/>
+                                <geom name="left_dh_finger2" type="mesh" mesh="dh_finger2_link" contype="1" conaffinity="0" material="white" group="1"/>
+                              </body>
+                              
+                              <!-- Left gripper center site -->
+                              <body name="left_dh_center_link" pos="0 0 0.14124" quat="0.7071067811865476 -0.7071067811865476 0 0">
+                                <site name="left_gripper_center" pos="0 0 0" size="0.01" rgba="0 1 0 1"/>
+                                <!-- Left tool0 target with coordinate frame -->
+                              </body>
+                            </body>
+                           </body>
+
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+    </body>
+  </worldbody>
+  <equality>
+    <!-- Left gripper: finger2 follows finger1 symmetrically (same position) -->
+    <joint joint1="left_dh_base_finger1_joint" joint2="left_dh_base_finger2_joint" polycoef="0 1 0 0 0"/>
+    
+    <!-- Right gripper: finger2 follows finger1 symmetrically (same position) -->
+    <joint joint1="right_dh_base_finger1_joint" joint2="right_dh_base_finger2_joint" polycoef="0 1 0 0 0"/>
+  </equality>
+
+   <keyframe>
+    <!-- Home position: all joints at zero, grippers open -->
+    <key name="home"
+         qpos="1.55 0.953 1.09 0.919 0.528 0.626 -2.32 0 0 2.05 -1.16 1.43 1.3 1.09 0.871 0 0 0 "
+         ctrl="1.55 0.953 1.09 0.919 0.528 0.626 -2.32  2.05 -1.16 1.43 1.3 1.09 0.871 0 0 0"/>
+    <!-- Zero position: all joints at zero, grippers closed -->
+    <key name="zero"
+         qpos="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+         ctrl="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+  </keyframe>
+</mujoco>

@@ -1,17 +1,229 @@
 <?xml version="1.0" ?>
 <robot name="dual_ur5e_robot">
 
+  <link name="world"/>
+
   <!-- World Link -->
   <link name="base_link"/>
+
+  <!-- 将 base_link 连接到 world -->
+  <joint name="world_to_base_link" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- =================================================================================== -->
+  <!-- |                                 底盘 BASE                                        | -->
+  <!-- =================================================================================== -->
+  
+  <link name="base_link_robot">
+    <inertial>
+      <origin xyz="-1.4069E-17 0 0.40258" rpy="0 0 0" />
+      <mass value="400.99" />
+      <inertia ixx="46.843" ixy="0.0" ixz="0.0" iyy="31.456" iyz="0.0" izz="38.411" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/base_link.STL" />
+      </geometry>
+      <material name="BaseGreen">
+        <color rgba="0.066667 0.6 0.29804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="base_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_link_robot"/>
+    <origin xyz="0.36 0 0" rpy="0.0 0.0 -1.5707963267948966" />
+  </joint>
+
+  <!-- =================================================================================== -->
+  <!-- |                                 躯干 BODY                                        | -->
+  <!-- =================================================================================== -->
+  
+  <link name="body_base_link">
+    <inertial>
+      <origin xyz="-1.72E-06 -0.00094189 0.44814" rpy="0 0 0" />
+      <mass value="5.3997" />
+      <inertia ixx="0.18584" ixy="-3.9082E-07" ixz="-1.5348E-07" iyy="0.24302" iyz="-4.7491E-05" izz="0.069032" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/body_link.STL" />
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/body_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="body_base_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="body_base_link"/>
+    <origin xyz="0 0 0.78" rpy="0 0 1.5707963267948966"/>
+  </joint>
+
+  <!-- Body right base link (右臂安装点) -->
+  <link name="body_right_base_link">
+    <inertial>
+      <origin xyz="1.446E-05 0.063848 -0.00090827" rpy="0 0 0" />
+      <mass value="0.65565" />
+      <inertia ixx="0.0011999" ixy="5.6587E-07" ixz="8.9252E-08" iyy="0.001589" iyz="-2.2042E-05" izz="0.001245" />
+    </inertial>
+   
+  </link>
+  
+  <joint name="right_arm_fixed_joint" type="fixed">
+    <origin xyz="-0.17475 0 0.64111" rpy="-0.95532 -0.5236 2.1863" />
+    <parent link="body_base_link" />
+    <child link="body_right_base_link" />
+  </joint>
+
+  <!-- Body left base link (左臂安装点) -->
+  <link name="body_left_base_link">
+    <inertial>
+      <origin xyz="1.446E-05 0.053848 -0.00090827" rpy="0 0 0" />
+      <mass value="0.65565" />
+      <inertia ixx="0.0011999" ixy="5.6587E-07" ixz="8.9252E-08" iyy="0.001589" iyz="-2.2042E-05" izz="0.001245" />
+    </inertial>
+  
+  </link>
+  
+  <joint name="left_arm_fixed_joint" type="fixed">
+    <origin xyz="0.18182 0 0.63404" rpy="-0.95532 0.5236 -2.1863" />
+    <parent link="body_base_link" />
+    <child link="body_left_base_link" />
+  </joint>
+
+  <!-- Bozi link -->
+  <link name="bozi_link">
+    <inertial>
+      <origin xyz="-0.02368 -0.062099 -0.0468" rpy="0 0 0" />
+      <mass value="0.5717" />
+      <inertia ixx="0.0043319" ixy="-0.0007239" ixz="-3.3674E-09" iyy="0.00074141" iyz="2.8419E-09" izz="0.0044017" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/bozi_link.STL" />
+      </geometry>
+      <material name="BaseGreen">
+        <color rgba="0.066667 0.6 0.29804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/bozi_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="bozi_joint" type="fixed">
+    <origin xyz="-0.0468 -0.045 0.91925" rpy="1.5708 0 -1.5708" />
+    <parent link="body_base_link" />
+    <child link="bozi_link" />
+  </joint>
+
+    <!-- =================================================================================== -->
+  <!-- |                                 头部 HEAD                                        | -->
+  <!-- =================================================================================== -->
+  
+  <link name="head_link">
+    <inertial>
+      <origin xyz="0.10509 0.0025699 -0.046837" rpy="0 0 0" />
+      <mass value="2.8418" />
+      <inertia ixx="0.02624" ixy="-0.00030059" ixz="-2.3615E-08" iyy="0.016373" iyz="4.8178E-07" izz="0.011367" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/head_link.STL" />
+      </geometry>
+      <material name="HeadYellow">
+        <color rgba="0.89804 0.82745 0.11765 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/head_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="head_body_joint" type="fixed">
+    <parent link="bozi_link"/>
+    <child link="head_link"/>
+    <origin xyz="0 0 0" rpy="0 0 -0.1"/>
+  </joint>
+
+  <!-- Camera fixed link -->
+  <link name="camera_fixed_link">
+    <inertial>
+      <origin xyz="0.00017347 0.027417 0.04176" rpy="0 0 0" />
+      <mass value="0.057939" />
+      <inertia ixx="3.4645E-05" ixy="1.3474E-09" ixz="4.6377E-07" iyy="6.3455E-06" iyz="4.0965E-07" izz="3.348E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/camera_fixed_link.STL" />
+      </geometry>
+      <material name="BaseGreen">
+        <color rgba="0.066667 0.6 0.29804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/camera_fixed_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="camera_fixed_joint" type="fixed">
+    <origin xyz="0.10034 0.16948 -0.0168" rpy="-1.5708 0 -2.0943951" />
+    <parent link="head_link" />
+    <child link="camera_fixed_link" />
+  </joint>
 
   <!-- =================================================================================== -->
   <!-- |                             RIGHT UR5e ARM                                      | -->
   <!-- =================================================================================== -->
+    <!-- Right correct link (修正关节) -->
+    <link name="right_correct_link">
+  
+
+
+    </link>
+    <joint name="right_correct_joint" type="fixed">
+      <parent link="body_right_base_link"/>
+      <child link="right_correct_link"/>
+      <origin xyz="0 0 0" rpy="-1.5707963 2.35619448975 0.0" />
+    </joint>
+
 
   <joint name="world_to_right_arm_base" type="fixed">
-    <parent link="base_link"/>
+    <parent link="right_correct_link"/>
     <child link="right_base_link"/>
-    <origin xyz="0 -0.275 0.3" rpy="0.7853981633974483 0 0"/>
+    <origin xyz="0 0 0" rpy=" 0 0 0 "/>
   </joint>
 
   <transmission name="right_shoulder_pan_trans">
@@ -303,11 +515,25 @@
   <!-- =================================================================================== -->
   <!-- |                              LEFT UR5e ARM                                      | -->
   <!-- =================================================================================== -->
+  <!-- Left correct link (修正关节) -->
+  <link name="left_correct_link">
 
+
+
+  </link>
+ 
+
+
+  <joint name="left_correct_joint" type="fixed">
+    <parent link="body_left_base_link"/>
+    <child link="left_correct_link"/>
+    <origin xyz="0 0 0" rpy="-1.5707963 -2.35619448975 0.0" />
+  </joint>
+  
   <joint name="world_to_left_arm_base" type="fixed">
-    <parent link="base_link"/>
+    <parent link="left_correct_link"/>
     <child link="left_base_link"/>
-    <origin xyz="0 0.275 0.3" rpy="0.7853981633974483 0 3.141592653589793"/>
+    <origin xyz="0 0 0" rpy="00 0 0 "/>
   </joint>
 
   <transmission name="left_shoulder_pan_trans">
@@ -595,5 +821,228 @@
     <parent link="left_flange"/>
     <child link="left_tool0"/>
   </joint>
+    <!-- =================================================================================== -->
+  <!-- |                              GRIPPER (DH PGI)                                   | -->
+  <!-- =================================================================================== -->
 
+  <!-- Right Gripper -->
+  <link name="right_dh_base_link">
+    <inertial>
+      <origin xyz="-2.97896383687117E-05 -0.00119414606853069 0.0383013066202999" rpy="0 0 0" />
+      <mass value="0.407689241604604" />
+      <inertia ixx="0.000382601149885368" ixy="-2.00188830802339E-08" ixz="-2.74934362808617E-08" iyy="0.000182283012175943" iyz="2.92748971762364E-07" izz="0.000433183926992861" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_base_link.STL" />
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="right_gripper_joint" type="fixed">
+    <parent link="right_tool0"/>
+    <child link="right_dh_base_link"/>
+    <origin xyz="0 0 0.006" rpy="0 0 -1.5707963"/>
+  </joint>
+
+  <link name="right_dh_finger1_link">
+    <inertial>
+      <origin xyz="0.00194790394990391 0.00918650753677023 0.00947748977599767" rpy="0 0 0" />
+      <mass value="0.0589543896992846" />
+      <inertia ixx="2.37128965154064E-05" ixy="3.83269385718325E-06" ixz="4.94815116549899E-06" iyy="3.37272907966156E-05" iyz="-4.62772008724202E-06" izz="1.98369145830284E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_finger1_link.STL" />
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_finger1_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="right_dh_base_finger1_joint" type="prismatic">
+    <origin xyz="-0.0184 0.0 0.09325" rpy="0 0 -1.5708" />
+    <parent link="right_dh_base_link" />
+    <child link="right_dh_finger1_link" />
+    <axis xyz="-1 0 0" />
+    <limit lower="0" upper="0.04" effort="30" velocity="0.5" />
+  </joint>
+
+  <link name="right_dh_finger2_link">
+    <inertial>
+      <origin xyz="0.00194790394990389 0.00918650753677023 0.00947748977599765" rpy="0 0 0" />
+      <mass value="0.0589543896992846" />
+      <inertia ixx="2.37128965154064E-05" ixy="3.83269385718325E-06" ixz="4.94815116549898E-06" iyy="3.37272907966157E-05" iyz="-4.62772008724202E-06" izz="1.98369145830284E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_finger2_link.STL" />
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_finger2_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="right_dh_base_finger2_joint" type="prismatic">
+    <origin xyz="0.0184 -0.0 0.09325" rpy="0 0 1.5708" />
+    <parent link="right_dh_base_link" />
+    <child link="right_dh_finger2_link" />
+    <axis xyz="-1 0 0" />
+    <limit lower="0" upper="0.04" effort="20" velocity="0.5" />
+    <mimic joint="right_dh_base_finger1_joint" multiplier="1" offset="0" />
+  </joint>
+
+  <link name="right_dh_center_link"/>
+  <joint name="right_dh_base_center_joint" type="fixed">
+    <origin xyz="0 0 0.14124" rpy="3.1416 -1.5708 0" />
+    <parent link="right_dh_base_link" />
+    <child link="right_dh_center_link" />
+  </joint>
+
+  <!-- Left Gripper -->
+  <link name="left_dh_base_link">
+    <inertial>
+      <origin xyz="-2.97896383687117E-05 -0.00119414606853069 0.0383013066202999" rpy="0 0 0" />
+      <mass value="0.407689241604604" />
+      <inertia ixx="0.000382601149885368" ixy="-2.00188830802339E-08" ixz="-2.74934362808617E-08" iyy="0.000182283012175943" iyz="2.92748971762364E-07" izz="0.000433183926992861" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_base_link.STL" />
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="left_gripper_joint" type="fixed">
+    <parent link="left_tool0"/>
+    <child link="left_dh_base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 -1.5707963"/>
+  </joint>
+
+  <link name="left_dh_finger1_link">
+    <inertial>
+      <origin xyz="0.00194790394990391 0.00918650753677023 0.00947748977599767" rpy="0 0 0" />
+      <mass value="0.0589543896992846" />
+      <inertia ixx="2.37128965154064E-05" ixy="3.83269385718325E-06" ixz="4.94815116549899E-06" iyy="3.37272907966156E-05" iyz="-4.62772008724202E-06" izz="1.98369145830284E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_finger1_link.STL" />
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_finger1_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="left_dh_base_finger1_joint" type="prismatic">
+    <origin xyz="-0.0184 0.0 0.09325" rpy="0 0 -1.5708" />
+    <parent link="left_dh_base_link" />
+    <child link="left_dh_finger1_link" />
+    <axis xyz="-1 0 0" />
+    <limit lower="0" upper="0.04" effort="30" velocity="0.5" />
+  </joint>
+
+  <link name="left_dh_finger2_link">
+    <inertial>
+      <origin xyz="0.00194790394990389 0.00918650753677023 0.00947748977599765" rpy="0 0 0" />
+      <mass value="0.0589543896992846" />
+      <inertia ixx="2.37128965154064E-05" ixy="3.83269385718325E-06" ixz="4.94815116549898E-06" iyy="3.37272907966157E-05" iyz="-4.62772008724202E-06" izz="1.98369145830284E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_finger2_link.STL" />
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file:///home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/assets/dh_finger2_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="left_dh_base_finger2_joint" type="prismatic">
+    <origin xyz="0.0184 -0.0 0.09325" rpy="0 0 1.5708" />
+    <parent link="left_dh_base_link" />
+    <child link="left_dh_finger2_link" />
+    <axis xyz="-1 0 0" />
+    <limit lower="0" upper="0.04" effort="20" velocity="0.5" />
+    <mimic joint="left_dh_base_finger1_joint" multiplier="1" offset="0" />
+  </joint>
+
+  <link name="left_dh_center_link"/>
+  <joint name="left_dh_base_center_joint" type="fixed">
+    <origin xyz="0 0 0.14124" rpy="3.1416 -1.5708 0" />
+    <parent link="left_dh_base_link" />
+    <child link="left_dh_center_link" />
+  </joint>
+
+  <!-- Gripper Transmissions -->
+  <transmission name="right_gripper_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_dh_base_finger1_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_gripper_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="left_gripper_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_dh_base_finger1_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_gripper_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 </robot>

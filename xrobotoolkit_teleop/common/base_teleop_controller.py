@@ -179,11 +179,11 @@ class BaseTeleopController(abc.ABC):
 
     def _update_ik(self):
         """
-        This is the core IK logic block. It reads from XR, updates Placo tasks,
-        and solves the kinematics.
+        This is the core IK logic block. It reads from XR, updates Placo tasks,and solves the kinematics.
+        从VR获取位姿，更新到placo库，然后作逆运动学解算
         """
         self._update_robot_state()
-        self.placo_robot.update_kinematics()
+        self.placo_robot.update_kinematics() # 更新运动学参数
 
         for src_name, config in self.manipulator_config.items():
             xr_grip_val = self.xr_client.get_key_value_by_name(config["control_trigger"])
@@ -217,6 +217,8 @@ class BaseTeleopController(abc.ABC):
                     print(f"{src_name} is deactivated.")
                     self.ref_ee_xyz[src_name] = None
                     self.ref_controller_xyz[src_name] = None
+                    # 在 deactivated 时，把 task target 直接设为当前末端，避免下次激活时 target 跳
+                    self.sync_end_effector_poses_to_placo_tasks()
 
         # Process motion tracker data
         self._update_motion_tracker_tasks()
