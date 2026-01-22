@@ -55,16 +55,6 @@ class MujocoTeleopController(BaseTeleopController):
         self.mj_model = mujoco.MjModel.from_xml_path(self.xml_path)
         self.mj_data = mujoco.MjData(self.mj_model)
 
-        print("=" * 80)
-        print("MuJoCo Joint Information:")
-        print("=" * 80)
-        mj_joint_info = []
-        for i in range(self.mj_model.njnt):
-            joint_name = mujoco.mj_id2name(self.mj_model, mujoco.mjtObj.mjOBJ_JOINT, i)
-            qpos_addr = self.mj_model.jnt_qposadr[i]
-            if joint_name:
-                mj_joint_info.append((i, joint_name, qpos_addr))
-                print(f"  [{i:2d}] {joint_name:40s} qpos_addr={qpos_addr:2d}")
         # Configure scene lighting
         self.mj_model.vis.headlight.ambient = [0.4, 0.4, 0.4]   
         self.mj_model.vis.headlight.diffuse = [0.8, 0.8, 0.8]
@@ -78,14 +68,9 @@ class MujocoTeleopController(BaseTeleopController):
             self.mj_data.ctrl[:] = calc_mujoco_ctrl_from_qpos(self.mj_model, self.mj_qpos_init)
         mujoco.mj_forward(self.mj_model, self.mj_data)
 
-                # Print initial MuJoCo qpos values
-        print("\nMuJoCo Initial qpos (from keyframe 'home'):")
-        for i, joint_name, qpos_addr in mj_joint_info:
-            if qpos_addr < len(self.mj_data.qpos):
-                print(f"  {joint_name:40s} = {self.mj_data.qpos[qpos_addr]:8.4f}")
-        print(f"  Full qpos array: {self.mj_data.qpos}")
-        print("=" * 80)
-
+        for _ in range(10):
+            mujoco.mj_step(self.mj_model, self.mj_data)
+        mujoco.mj_forward(self.mj_model, self.mj_data)
         # setup mocap target
         for name, config in self.manipulator_config.items():
             if "vis_target" not in config:
@@ -305,7 +290,7 @@ class MujocoTeleopController(BaseTeleopController):
             viewer.cam.azimuth = 0
             viewer.cam.elevation = -65
             viewer.cam.distance = 1.3
-            viewer.cam.lookat = [0.65, 0, 1.45]
+            viewer.cam.lookat = [-0.65, 0, 1.45]
 
             while not self._stop_event.is_set():
                 try:

@@ -5,6 +5,8 @@ from xrobotoolkit_teleop.simulation.mujoco_teleop_controller import (
     MujocoTeleopController,
 )
 from xrobotoolkit_teleop.utils.path_utils import ASSET_PATH
+import mujoco
+import numpy as np
 
 
 def main(
@@ -45,6 +47,26 @@ def main(
         },
     }
 
+    model = mujoco.MjModel.from_xml_path(xml_path)
+    
+
+    # 在创建 MujocoTeleopController 时
+    mj_qpos_init = np.zeros(model.nq)  # 先创建全零数组
+
+    # 找到 yuanzhu_joint0 的 qpos 索引
+    yuanzhu_joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "yuanzhu_joint0")
+    yuanzhu_qpos_addr = model.jnt_qposadr[yuanzhu_joint_id]
+
+    # 设置位置 (x, y, z) 和四元数 (w, x, y, z)
+    mj_qpos_init[yuanzhu_qpos_addr:yuanzhu_qpos_addr+3] = [-0.5, 0.2, 0.80]  # 位置
+    mj_qpos_init[yuanzhu_qpos_addr+3:yuanzhu_qpos_addr+7] = [1, 0, 0, 0]  # 四元数 (w, x, y, z)
+
+    # 同样设置 yuanzhukong
+    yuanzhukong_joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "yuanzhukong_joint0")
+    yuanzhukong_qpos_addr = model.jnt_qposadr[yuanzhukong_joint_id]
+    mj_qpos_init[yuanzhukong_qpos_addr:yuanzhukong_qpos_addr+3] = [-0.5, -0.2, 0.80]
+    mj_qpos_init[yuanzhukong_qpos_addr+3:yuanzhukong_qpos_addr+7] = [1, 0, 0, 0]
+
     # Create and initialize the teleoperation controller
     controller = MujocoTeleopController(
         xml_path=xml_path,
@@ -52,6 +74,7 @@ def main(
         manipulator_config=config,
         scale_factor=scale_factor,
         visualize_placo=visualize_placo,
+        mj_qpos_init=mj_qpos_init,
     )
 
     # additional constraints hardcoded here for now

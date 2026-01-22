@@ -12,43 +12,76 @@
     <texture name="grid" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" width="512" height="512"
       mark="cross" markrgb=".8 .8 .8"/>
     <material name="grid" texture="grid" texrepeat="1 1" texuniform="true"/>
-
-   <!-- Peg assets -->
-    <mesh file="/home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/object_scene/yuanzhu.STL" name="yuanzhu_mesh" scale="0.002 0.002 0.002"/>
-    <texture file="/home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/object_scene/red-wood.png" name="red-wood"/>
-    <material name="peg_material" reflectance="1.0" shininess="1.0" specular="1.0" texrepeat="1 1" texture="red-wood" texuniform="true"/>
-
-    <!-- Hole assets -->
-    <mesh file="/home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/object_scene/yuanzhukong.STL" name="yuanzhukong_mesh" scale="0.002 0.002 0.002"/>
-    <texture file="/home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/object_scene/blue-wood.png" name="blue-wood"/>
-    <material name="hole_material" reflectance="1.0" shininess="1.0" specular="1.0" texrepeat="1 1" texture="blue-wood" texuniform="true"/>
-
    
+    <texture type="cube" colorspace="linear" name="tex-ceramic" file="/home/zz/mujoco_RL_file/robosuite/robosuite/models/assets/textures/ceramic.png"/>
+    <texture type="cube" colorspace="linear" name="tex-steel-brushed" file="/home/zz/mujoco_RL_file/robosuite/robosuite/models/assets/textures/steel-brushed.png"/>
+    <texture type="2d" colorspace="linear" name="tex-light-gray-plaster" file="/home/zz/mujoco_RL_file/robosuite/robosuite/models/assets/textures/light-gray-plaster.png"/>
+    <texture type="cube" colorspace="auto" name="textable" builtin="flat" rgb1="0.5 0.5 0.5" width="512" height="3072"/>
+    <material name="table_ceramic" texture="tex-ceramic" specular="0.2" shininess="0"/>
+    <material name="table_legs_metal" texture="tex-steel-brushed" shininess="0.8" reflectance="0.8"/>
+    <material name="walls_mat" texture="tex-light-gray-plaster" texuniform="true" texrepeat="3 3" specular="0.1" shininess="0.1"/>
+    <material name="table_mat" texture="textable"/>
+   
+   <texture type="cube" colorspace="linear" name="yuanzhukong_blue-wood" file="/home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/object_scene/blue-wood.png"/>
+    <texture type="cube" colorspace="linear" name="yuanzhu_red-wood" file="/home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/object_scene/red-wood.png"/>
+   <material name="yuanzhu_bmetal" texture="yuanzhu_red-wood" specular="1" shininess="1" reflectance="1"/>
+    <material name="yuanzhukong_bmetal" texture="yuanzhukong_blue-wood" specular="1" shininess="1" reflectance="1"/>
+     <mesh name="yuanzhu_mesh" file="/home/zz/mujoco_RL_file/robosuite/robosuite/models/assets/objects/meshes/yuanzhu.STL" scale="0.0015 0.0015 0.0015"/>
+    <mesh name="yuanzhukong_mesh" file="/home/zz/mujoco_RL_file/robosuite/robosuite/models/assets/objects/meshes/yuanzhukong.STL" scale="0.0015 0.0015 0.0015"/>
   </asset>
 
   <worldbody>
     <light pos="0 0 1.5" directional="true"/>
-    <geom name="floor" size="1 1 0.01" type="plane" material="grid" contype="1" conaffinity="1" group="0"/>
+    <geom name="floor" size="5 5 0.01" type="plane" material="grid" contype="1" conaffinity="1" group="0"/>
 
-    <!-- Peg object on table (桌面上的圆柱体) -->
-    <!-- 桌面高度: 0.775 + 0.025 = 0.8, peg 底部在 -0.082, 所以 peg body 应该在 0.8 + 0.082 = 0.882 -->
-    <body name="peg" pos="0.5  0.2 0.9" quat= " 0 0 0 1">
-      <freejoint/>
-      <geom name="peg_col" type="cylinder" size="0.004 0.03" density="800"  friction="1 0.005 0.0001" solref="0.01 1" solimp="0.9 0.95 0.001" condim="3" contype="1" conaffinity="65535"/>
-      <geom name="peg_vis" type="mesh" mesh="yuanzhu_mesh" material="peg_material" contype="0" conaffinity="0"/>
-      <site rgba="0 0 0 0" size="0.005" pos="0 0 -0.03" name="peg_bottom_site"/>
-
+   
+    <!-- 第一个可抓取物体：放置在底盘前方右侧 -->
+    <body name="yuanzhu_root" pos="-0.5 0.2 0.80">
+      <joint name="yuanzhu_joint0" type="free"/>  <!-- 自由关节，可自由移动 -->
+      <geom name="yuanzhu_main_geom" type="mesh" 
+            condim="4"                             
+            friction="0.95 0.3 0.1"                
+            solimp="0.998 0.998"               
+            density="100"                          
+            material="yuanzhu_bmetal"            
+            rgba="0.5 0 0 1"                     
+            mesh="yuanzhu_mesh"
+            contype="1" conaffinity="1"/>                 
+      <geom name="yuanzhu_main_geom_visual" type="mesh" 
+            contype="0" conaffinity="0"          
+            group="1" 
+            mass="0" 
+            material="yuanzhu_bmetal" 
+            mesh="yuanzhu_mesh"/>
     </body>
 
-    <!-- Hole object on table (桌面上的圆柱孔) -->
-    <body name="hole" pos="0.5  -0.2 0.9">
-      <freejoint/>
-      <geom name="hole_col" type="cylinder" size="0.0043 0.03" density="1000"  friction="1 0.005 0.0001" solref="0.01 1" solimp="0.9 0.95 0.001" condim="3" contype="1" conaffinity="65535"/>
-      <geom name="hole_vis" type="mesh" mesh="yuanzhukong_mesh" material="hole_material" contype="0" conaffinity="0"/>
+    <body name="yuanzhukong_root" pos="-0.5 -0.2 0.80">
+      <joint name="yuanzhukong_joint0" type="free"/>
+      <geom name="yuanzhukong_main_geom" type="mesh" 
+            condim="4" 
+            friction="0.95 0.3 0.1" 
+            solimp="0.998 0.998" 
+            density="100" 
+            material="yuanzhukong_bmetal"        
+            rgba="0.5 0 0 1" 
+            mesh="yuanzhukong_mesh"
+             contype="1" conaffinity="1"/>
+      <geom name="yuanzhukong_main_geom_visual" type="mesh" 
+            contype="0" conaffinity="0" 
+            group="1" 
+            mass="0" 
+            material="yuanzhukong_bmetal" 
+            mesh="yuanzhukong_mesh"/>
+    </body>
 
-
-      <site rgba="0 0 0 0" size="0.005" pos="0 0 0.03" name="hole_top_site"/>
-     
+        <body name="table" pos="-0.5 0 0.775">
+      <geom name="table_collision" size="0.4 0.4 0.025" type="box" rgba="0.5 0.5 0 1"/>
+      <geom name="table_visual" size="0.4 0.4 0.025" type="box" contype="0" conaffinity="0" group="1" material="table_ceramic"/>
+      <geom name="table_leg1_visual" size="0.025 0.3875" pos="0.3 0.3 -0.3875" type="cylinder" contype="0" conaffinity="0" group="1" material="table_legs_metal"/>
+      <geom name="table_leg2_visual" size="0.025 0.3875" pos="-0.3 0.3 -0.3875" type="cylinder" contype="0" conaffinity="0" group="1" material="table_legs_metal"/>
+      <geom name="table_leg3_visual" size="0.025 0.3875" pos="-0.3 -0.3 -0.3875" type="cylinder" contype="0" conaffinity="0" group="1" material="table_legs_metal"/>
+      <geom name="table_leg4_visual" size="0.025 0.3875" pos="0.3 -0.3 -0.3875" type="cylinder" contype="0" conaffinity="0" group="1" material="table_legs_metal"/>
+      <site name="table_top" pos="0 0 0.025" size="0.001" rgba="0 0 0 0"/>
     </body>
 
     <body name="right_target" pos=" 0  0 0" quat="1  0 0 0" mocap="true">
