@@ -21,7 +21,7 @@
     <material name="table_legs_metal" texture="tex-steel-brushed" shininess="0.8" reflectance="0.8"/>
     <material name="walls_mat" texture="tex-light-gray-plaster" texuniform="true" texrepeat="3 3" specular="0.1" shininess="0.1"/>
     <material name="table_mat" texture="textable"/>
-   
+
    <texture type="cube" colorspace="linear" name="yuanzhukong_blue-wood" file="/home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/object_scene/blue-wood.png"/>
     <texture type="cube" colorspace="linear" name="yuanzhu_red-wood" file="/home/zz/mujoco_RL_file/robosuite/pico_vr/XRoboToolkit-Teleop-Sample-Python/assets/universal_robots_ur5e/object_scene/red-wood.png"/>
    <material name="yuanzhu_bmetal" texture="yuanzhu_red-wood" specular="1" shininess="1" reflectance="1"/>
@@ -31,7 +31,7 @@
   </asset>
 
   <worldbody>
-    <light pos="0 0 1.5" directional="true"/>
+    <light pos="0 0 1.5" directional="false"/>
     <geom name="floor" size="5 5 0.01" type="plane" material="grid" contype="1" conaffinity="1" group="0"/>
 
    
@@ -76,7 +76,7 @@
 
         <body name="table" pos="-0.5 0 0.775">
       <geom name="table_collision" size="0.4 0.4 0.025" type="box" rgba="0.5 0.5 0 1"/>
-      <geom name="table_visual" size="0.4 0.4 0.025" type="box" contype="0" conaffinity="0" group="1" material="table_ceramic"/>
+      <geom name="table_visual" size="0.4 0.4 0.025" type="box" contype="0" conaffinity="0" group="1" material="base_green"/>
       <geom name="table_leg1_visual" size="0.025 0.3875" pos="0.3 0.3 -0.3875" type="cylinder" contype="0" conaffinity="0" group="1" material="table_legs_metal"/>
       <geom name="table_leg2_visual" size="0.025 0.3875" pos="-0.3 0.3 -0.3875" type="cylinder" contype="0" conaffinity="0" group="1" material="table_legs_metal"/>
       <geom name="table_leg3_visual" size="0.025 0.3875" pos="-0.3 -0.3 -0.3875" type="cylinder" contype="0" conaffinity="0" group="1" material="table_legs_metal"/>

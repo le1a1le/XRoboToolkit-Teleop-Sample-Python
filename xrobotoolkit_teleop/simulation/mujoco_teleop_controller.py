@@ -287,7 +287,7 @@ class MujocoTeleopController(BaseTeleopController):
     def run(self):
         with mj_viewer.launch_passive(self.mj_model, self.mj_data) as viewer:
             # Set up viewer camera
-            viewer.cam.azimuth = 0
+            viewer.cam.azimuth = 180
             viewer.cam.elevation = -65
             viewer.cam.distance = 1.3
             viewer.cam.lookat = [-0.65, 0, 1.45]
